@@ -81,6 +81,6 @@ class TaskController extends Controller
     {
         $task = Task::find($id);
         $task->delete();
-        return redirect()->route('task.index')->with('message','Task deleted Successfully.');
+        return redirect()->route('tasks.index')->with('message','Task deleted Successfully.');
     }
 }

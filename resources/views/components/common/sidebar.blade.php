@@ -138,7 +138,7 @@
                     </button>
                     <ul x-cloak x-show="activeDropdown === 'Task_module'" x-collapse class="sub-menu text-gray-500">
                         <li>
-                            <a href="{{route('task.index')}}">Task List</a>
+                            <a href="{{route('tasks.index')}}">Task List</a>
                         </li>
                         <li>
                             <a href="">Task Reports</a>
