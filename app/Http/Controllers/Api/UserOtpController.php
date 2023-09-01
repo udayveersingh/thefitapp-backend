@@ -51,7 +51,7 @@ class UserOtpController extends Controller
                 // 'subject' => 'Testing Application OTP',
                 'body' => 'Your OTP is : '. $otpcode
             ];
-            if(env('APP_ENV') != "local"){
+            if(env('APP_ENV') == "production"){
                 Mail::to($request->email)->send(new sendEmail($mail_details));
             }
             return response()->json(['success' => true, "message" => "OTP sent successfully"], 200);
