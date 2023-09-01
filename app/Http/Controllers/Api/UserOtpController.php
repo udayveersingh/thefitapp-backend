@@ -36,7 +36,9 @@ class UserOtpController extends Controller
             'email' => 'required|exists:users,email',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()], 400);
         }
         $user = User::where("email",'=',$request->email)->first();
         if(is_null($user)){
@@ -49,7 +51,9 @@ class UserOtpController extends Controller
                 // 'subject' => 'Testing Application OTP',
                 'body' => 'Your OTP is : '. $otpcode
             ];
-        //     Mail::to($request->email)->send(new sendEmail($mail_details));
+            if(env('APP_ENV') != "local"){
+                Mail::to($request->email)->send(new sendEmail($mail_details));
+            }
             return response()->json(['success' => true, "message" => "OTP sent successfully"], 200);
         }else{
             return response()->json(['success' => false, "message" => "Failed to send OTP"], 400);
@@ -67,9 +71,9 @@ class UserOtpController extends Controller
 
         $now = Carbon::now();
         if (!$verificationCode) {
-            return response()->json(['success' => false, "message" => "Your OTP is not correct"], 404);
+            return response()->json(['success' => false, "message" => "Your OTP is not correct"], 400);
         }elseif($verificationCode && $now->isAfter($verificationCode->expire_at)){
-            return response()->json(['success' => false, "message" => "Your OTP has been expired"], 404);
+            return response()->json(['success' => false, "message" => "Your OTP has been expired"], 400);
         }
 
         $user = User::find($request->user_id);
@@ -84,19 +88,20 @@ class UserOtpController extends Controller
                 'email_verified_at'  => Carbon::now(),
             ]);
 
-             if($request->login)
-             {
+             if($request->login){
+                $user = User::find($user->id);
                 $token = JWTAuth::fromUser($user);
-
                 return response()->json([
                    'success' => true,
                    'data' => $user,
                    'access_token' => $token            
-               ], 201);
+               ], 200);
              }else{
                  return response()->json(['success' => true, "message" => "User verified successfully"], 200);
              }
 
+        }else{
+            return response()->json(['success' => false, "message" => "Something went wrong. Please try again."], 400);
         }
     }
 

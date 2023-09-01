@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class UserOtp extends Model
 {
     protected $fillable = [
-        'user_id','otp','expire_at'
+        'user_id','otp','expire_at','created_at'
     ];
     public $timestamps = false;
 }

@@ -32,10 +32,13 @@ class UserController extends Controller
         if(is_null($user)){
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }else{
-        $user = User::with('profile')->find($user->id);
-        return response()->json(['success' => true, 'data' => $user], 200);
+            $user = User::with('profile')->find($user->id)->toArray();
+            if(isset($user['profile'])){
+                $user['profile'] = get_images_absolute_path($user['profile']);
+            }
+            return response()->json(['success' => true, 'data' => $user], 200);
+        }
     }
-}
 
     /**
      * Show the form for creating a new resource.
@@ -50,18 +53,38 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        $user = auth()->user();
+        $user = user::find(auth()->user()->id);
         if($user){
-            $updateArray = [];
+            
             if($request->input('pass_code')){
-                $updateArray['pass_code'] = $request->input('pass_code');
+                $user->pass_code = $request->input('pass_code');
             }
-            if(!empty($updateArray)){
-               $user =  User::where('id',$user->id)->update( $updateArray);
+            if($request->input('name')){
+                $user->name = $request->input('name');
             }
+            if($request->input('phone')){
+                $user->phone = $request->input('phone');
+            }
+
+            $user->save();
+           
+            if ($request->hasFile('profile_pic')) {
+                $user_profile = Profile::where('user_id','=', $user->id)->first();
+                if(is_null($user_profile)){
+                    $user_profile = new Profile();
+                    $user_profile->user_id = $user->id;
+                }
+
+                $profile_pic = $user->id."-".time() . '.' . $request->profile_pic->extension();
+                $request->profile_pic->move(public_path('storage/images/') , $profile_pic);
+
+                $user_profile->profile_pic =  $profile_pic;
+                $user_profile->save();
+            }
+
             return response()->json(['success' => true, 'user' => $user], 200);
         }else{
-            return response()->json(['success' => false, 'message' => "Invalid Token"], 401);
+            return response()->json(['success' => false, 'message' => "Unauthorized Error!"], 401);
         }
     }
 
@@ -86,41 +109,7 @@ class UserController extends Controller
      */
     public function update(Request $request)
     {
-        $userId = auth()->user()->id; 
-        $validator = Validator::make($request->all(), [
-            'phone' => "unique:users,phone,$userId",
-            'referal_code' => "unique:users,referal_code,$userId",
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
-        }
-        $profile_pic = Null;
-        if ($request->hasFile('profile_pic')) {
-            $profile_pic = time() . '.' . $request->profile_pic->extension();
-            $request->profile_pic->move(public_path('storage/user/'. $userId.'/profile') , $profile_pic);
-        }
-        $user = User::find($userId);
-        $user->name = $request->name;
-        $user->phone = $request->phone;
-        $user->pass_code = $request->pass_code;
-        $user->referal_code = $request->referal_code;
-        $user->save();
-        
-        $user_profile = Profile::where('user_id','=', $user->id)->first();
-        if(!empty($user_profile))
-        {
-            $profile = Profile::where('user_id','=', $user->id)->first();
-        }else{
-            $profile = new Profile();
-        }
-        if(!empty($profile_pic))
-        {
-            $profile->user_id = $user->id;
-            $profile->profile_pic =  $profile_pic;
-        }
-        $profile->save();
-
-        return response()->json(['success' => true, 'data' => [$user, 'profile' => $profile->profile_pic]], 200);
+        //
     }
 
     /**

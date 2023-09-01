@@ -39,7 +39,9 @@ class RegisterController extends Controller
             'pass_code' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors(), 422);
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()], 400);
         }
         $user = User::where([
             'email' => $request->input('user'),
@@ -82,7 +84,9 @@ class RegisterController extends Controller
             'phone' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json( [
+                'success' => false,
+                'message' => $validator->errors()], 400);
         }
         $user = User::create([
             'name' => $request->name,
