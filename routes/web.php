@@ -136,3 +136,11 @@ Route::get('/tasks/delete/{id}',[App\Http\Controllers\TaskController::class,'des
 Route::post('/tasks/store',[App\Http\Controllers\TaskController::class,'store'])->name('tasks.store');
 Route::post('/tasks/update/{id}',[App\Http\Controllers\TaskController::class,'update'])->name('tasks.update');
 
+//Settings
+Route::get('/settings', [App\Http\Controllers\SettingController::class,'index'])->name('settings.index');
+Route::get('/settings/create', [App\Http\Controllers\SettingController::class,'create'])->name('settings.create');
+Route::get('/settings/{id}/edit',[App\Http\Controllers\SettingController::class,'edit'])->name('settings.edit');
+Route::get('/settings/delete/{id}',[App\Http\Controllers\SettingController::class,'destroy'])->name('settings.delete');
+Route::post('/settings/store',[App\Http\Controllers\SettingController::class,'store'])->name('settings.store');
+Route::post('/settings/update/{id}',[App\Http\Controllers\SettingController::class,'update'])->name('settings.update');
+
