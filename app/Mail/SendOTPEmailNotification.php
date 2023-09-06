@@ -65,6 +65,6 @@ class SendOTPEmailNotification extends Mailable
         // return $this->view('view.name');
         return $this->from(config('mail.from.address'), env('APP_NAME', 'TheFitApp'))
             ->subject(env('APP_NAME', 'TheFitApp').": OTP")
-            ->markdown('email.otp-notification');
+            ->markdown('emails.otp-notification');
     }
 }
