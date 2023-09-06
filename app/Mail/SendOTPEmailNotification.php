@@ -8,18 +8,21 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use App\Models\User;
 
-class SendEmail extends Mailable
+class SendOTPEmailNotification extends Mailable
 {
     use Queueable, SerializesModels;
-    public array $mail_details;
+    public array $user;
+    public array $OTPCode;
 
     /**
      * Create a new message instance.
      */
-    public function __construct(array $mail_details)
+    public function __construct(User $user, $OTPCode)
     {
-        $this->mail_details = $mail_details;
+        $this->user = $user;
+        $this->OTPCode = $OTPCode;
     }
 
     /**
@@ -50,5 +53,18 @@ class SendEmail extends Mailable
     public function attachments(): array
     {
         return [];
+    }
+
+    /**
+     * Build the message.
+     *
+     * @return $this
+     */
+    public function build()
+    {
+        // return $this->view('view.name');
+        return $this->from(config('mail.from.address'), env('APP_NAME', 'TheFitApp'))
+            ->subject(env('APP_NAME', 'TheFitApp').": OTP")
+            ->markdown('email.otp-notification');
     }
 }
