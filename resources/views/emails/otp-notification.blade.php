@@ -1,7 +1,7 @@
 <x-mail::message>
 Dear {{ $user->name }}, <br/>
 
-Your One Time Password for <strong>TheFitApp</strong> is {{ $OTPCode }}.<br>
+Your One Time Password for <strong>TheFitApp</strong> is {{ $OTPCode->otp }}.<br>
 OTP is valid for 10 mintues only.<br/><br/>
 
 Do not share this OTP with anyone.
