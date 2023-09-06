@@ -13,8 +13,8 @@ use App\Models\User;
 class SendOTPEmailNotification extends Mailable
 {
     use Queueable, SerializesModels;
-    public array $user;
-    public array $OTPCode;
+    public $user;
+    public $OTPCode;
 
     /**
      * Create a new message instance.
