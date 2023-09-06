@@ -117,7 +117,7 @@ class UserOtpController extends Controller
         // Create a New OTP
         return UserOtp::create([
             'user_id' => $user->id,
-            'otp' => rand(123456, 999999),
+            'otp' => rand(1234, 9999),
             'expire_at' => Carbon::now()->addMinutes(10),
             'created_at' => Carbon::now()
         ]);
