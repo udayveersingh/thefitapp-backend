@@ -9,7 +9,7 @@ use App\Models\User;
 use App\Models\UserOtp;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Mail;
-use App\Mail\sendEmail;
+use App\Mail\SendOTPEmailNotification;
 use PHPOpenSourceSaver\JWTAuth\Facades\JWTAuth;
 
 class UserOtpController extends Controller
@@ -47,12 +47,8 @@ class UserOtpController extends Controller
 
         if($otpcode = $this->generateOtp($request->email)){
             //TODO: Send Email to customer with OTP Code
-            $mail_details = [
-                // 'subject' => 'Testing Application OTP',
-                'body' => 'Your OTP is : '. $otpcode
-            ];
-            if(env('APP_ENV') == "production"){
-                Mail::to($request->email)->send(new sendEmail($mail_details));
+            if(env('APP_ENV') != "local"){
+                Mail::to($request->email)->send(new SendOTPEmailNotification($user, $otpcode));
             }
             return response()->json(['success' => true, "message" => "OTP sent successfully"], 200);
         }else{
@@ -121,7 +117,7 @@ class UserOtpController extends Controller
         // Create a New OTP
         return UserOtp::create([
             'user_id' => $user->id,
-            'otp' => rand(123456, 999999),
+            'otp' => rand(1234, 9999),
             'expire_at' => Carbon::now()->addMinutes(10),
             'created_at' => Carbon::now()
         ]);
