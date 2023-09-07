@@ -14,7 +14,7 @@ To authenticate an user, you should first call the `Register` API endpoint.
 You should send the request body in `JSON` that will have the details of the user. 
 
 ```http
-GET http://thefitapp.60dweb.com/api/auth/register
+POST http://thefitapp.60dweb.com/api/auth/register
 ```
 
 | Parameter | Type | Description |
