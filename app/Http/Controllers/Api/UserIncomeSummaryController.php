@@ -47,7 +47,7 @@ class UserIncomeSummaryController extends Controller
             'transaction_date' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json($validator->errors()->toJson(), 400);
+            return response()->json($validator->errors()->first(), 400);
         }
         $user = auth()->user();
         if ($user) {

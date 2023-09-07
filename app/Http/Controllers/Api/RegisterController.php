@@ -42,28 +42,29 @@ class RegisterController extends Controller
             $error = $validator->errors()->first();
             return response()->json([
                 'success' => false,
-                'message' =>  $error], 400);
+                'message' =>  $error
+            ], 400);
         }
         $user = User::where([
             'email' => $request->input('user'),
             'pass_code' => $request->input('pass_code'),
         ])->first();
-        if(is_null($user)){
+        if (is_null($user)) {
             $user = User::where([
                 'phone' => $request->input('user'),
                 'pass_code' => $request->input('pass_code'),
             ])->first();
         }
 
-        if(is_null($user)){
-            return response()->json(["success"=> false, "message" =>'No user found.'], 404);
+        if (is_null($user)) {
+            return response()->json(["success" => false, "message" => 'No user found.'], 404);
         }
         $token = JWTAuth::fromUser($user);
 
         return response()->json([
             'success' => true,
             'data' => $user,
-            'access_token' => $token            
+            'access_token' => $token
         ], 201);
 
         // if (!$token = auth()->attempt($validator->validated())) {
@@ -85,9 +86,10 @@ class RegisterController extends Controller
             'phone' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json( [
+            return response()->json([
                 'success' => false,
-                'message' => $validator->errors()], 400);
+                'message' => $validator->errors()->first()
+            ], 400);
         }
         $user = User::create([
             'name' => $request->name,
@@ -95,7 +97,7 @@ class RegisterController extends Controller
             'phone' => $request->phone,
             'refferal_code' => ($request->refferal_code) ? $request->refferal_code : null,
         ]);
-        
+
         // $token = JWTAuth::fromUser($user);
         // $token = auth::attempt($newUser);
 

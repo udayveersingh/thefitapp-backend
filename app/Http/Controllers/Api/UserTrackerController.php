@@ -53,7 +53,7 @@ class UserTrackerController extends Controller
         if ($validator->fails()) {
             return response()->json( [
                 'success' => false,
-                'message' => $validator->errors()], 400);
+                'message' => $validator->errors()->first()], 400);
         }
         $user = auth()->user();
 

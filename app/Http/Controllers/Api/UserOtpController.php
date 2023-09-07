@@ -38,7 +38,7 @@ class UserOtpController extends Controller
         if ($validator->fails()) {
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()], 400);
+                'message' => $validator->errors()->first()], 400);
         }
         $user = User::where("email",'=',$request->email)->first();
         if(is_null($user)){
