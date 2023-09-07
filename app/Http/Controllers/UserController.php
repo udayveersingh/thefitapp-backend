@@ -24,12 +24,12 @@ class UserController extends Controller
 
      Public function userDetail($id)
      {
-        $profile = Profile::with('user')->where('user_id','=',$id)->first();
-        if(is_null($profile)){
-            return redirect()->route('users')->with('message','Profile Detail Not added.');
-        }
+        $user = User::with('profile')->find($id);
+        // if(is_null($user->profile)){
+        //     return redirect()->route('users')->with('message','Profile Detail Not added.');
+        // }
         $tasks = Task::get();
-        return view('users.user-detail',compact('profile','tasks'));
+        return view('users.user-detail',compact('user','tasks'));
      }
 
     /**
@@ -59,9 +59,10 @@ class UserController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(string $id)
+    public function edit($id)
     {
-        //
+         $user = User::with('profile')->find($id);
+         return view('users.edit', compact('user'));
     }
 
     /**

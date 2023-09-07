@@ -39,9 +39,12 @@ class RegisterController extends Controller
             'pass_code' => 'required',
         ]);
         if ($validator->fails()) {
-            return response()->json([
-                'success' => false,
-                'message' => $validator->errors()], 400);
+            $errors = explode(',',$validator->errors());
+            dd($errors[0],$errors);
+            // return response()->json();
+
+                // 'success' => false,
+                // 'message' => $validator->errors()], 400);
         }
         $user = User::where([
             'email' => $request->input('user'),
@@ -109,10 +112,10 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function refresh()
-    // {
-    //     return $this->createNewToken(auth()->refresh());
-    // }
+    public function refresh()
+    {
+        return $this->createNewToken(auth()->refresh());
+    }
 
 
 

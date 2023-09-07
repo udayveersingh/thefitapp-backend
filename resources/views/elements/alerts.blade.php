@@ -63,8 +63,7 @@
                             </svg>
                         </button>
                     </div>
-                    <div
-                        class="flex items-center p-3.5 rounded text-success bg-success-light dark:bg-success-dark-light">
+                    <div class="flex items-center p-3.5 rounded text-success bg-success-light dark:bg-success-dark-light">
                         <span class="ltr:pr-2 rtl:pl-2"><strong class="ltr:mr-1 rtl:ml-1">Success!</strong>Lorem Ipsum
                             is simply dummy text of the printing.</span>
                         <button type="button" class="ltr:ml-auto rtl:mr-auto hover:opacity-80">

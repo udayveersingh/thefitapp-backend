@@ -1,8 +1,16 @@
 <x-layout.default>
     <script src="{{ asset('/assets/js/simple-datatables.js') }}"></script>
     @if (session()->has('message'))
-        <div class="alert alert-success">
-            {{ session()->get('message') }}
+        <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light mb-2">
+            <span class="ltr:pr-2 rtl:pl-2"><strong class="ltr:mr-1 rtl:ml-1">
+                </strong>{{ session()->get('message') }}</span>
+            <button type="button" class="ltr:ml-auto rtl:mr-auto hover:opacity-80">
+                <svg xmlns="" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
     @endif
     <div x-data="multipleTable">
@@ -23,9 +31,16 @@
                             headings: ['Name', 'Email', 'Phone', 'Referral Code', 'Action'],
                             data: [
                                 @foreach ($users as $user)
-                                    ['<a href="{{ route('user.detail', $user->id) }}">{{ $user->name }}</a>',
+                                    ['<a href="{{ route('user.detail', $user->id) }}" class="text-primary hover:underline">{{ $user->name }}</a>',
                                         '{{ $user->email }}', '{{ $user->phone }}',
-                                        '{{ $user->refferal_code }}', ''
+                                        '{{ $user->referal_code }}',
+                                        '<div x-data="dropdown" @click.outside="open= false" class="dropdown ltr:ml-4 rtl:mr-4"><a href="javascript:;" @click="toggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"' +
+                                        'xmlns="" class="w-5 h-5 opacity-80 hover:opacity-100">' +
+                                        '<circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" /><circle opacity="0.5" cx="12" cy="12" r="2"' +
+                                        'stroke="currentColor" stroke-width="1.5" /><circle cx="19" cy="12" r="2"'+
+                                        'stroke="currentColor" stroke-width="1.5"/></svg></a><ul x-cloak x-show="open" x-transition x-transition.duration.300ms'+
+                                        'class="ltr:right-0 rtl:left-0 whitespace-nowrap"><li><a href="javascript:;" @click="toggle">View User Tracker</a></li>'+
+                                        '<li><a href="javascript:;" @click="toggle">User Earning</a></li></ul></div>',
                                     ],
                                 @endforeach
                             ]
@@ -34,34 +49,12 @@
                         perPage: 10,
                         perPageSelect: [10, 20, 30, 50, 100],
                         columns: [{
-                                select: 0,
-                                render: (data, cell, row) => {
-                                    return `<div class="flex items-center w-max"><a href="">${data}</a></div>`;
-                                },
-                                sort: "asc"
+                            select: 0,
+                            render: (data, cell, row) => {
+                                return `<div class="flex items-center w-max"><a href="">${data}</a></div>`;
                             },
-                            // {
-                            //     select: 3,
-                            //     render: (data, cell, row) => {
-                            //         return this.formatDate(data);
-                            //     },
-                            // },
-                            // {
-                            //     select: 6,
-                            //     render: (data, cell, row) => {
-                            //         return '<span class="badge bg-' + this
-                            //         .randomColor() + '">' + this.randomStatus() +
-                            //             '</span>';
-                            //     },
-                            // },
-                            {
-                                select: 4,
-                                sortable: false,
-                                render: (data, cell, row) => {
-                                    return '<div class="text-center"><button type="button" x-tooltip="Delete"> <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-5 h-5"> <circle opacity="0.5" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="1.5" /> <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" /> </svg> </button></div>';
-                                },
-                            }
-                        ],
+                            sort: "asc"
+                        }, ],
                         firstLast: true,
                         firstText: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M13 19L7 12L13 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M16.9998 19L10.9998 12L16.9998 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
                         lastText: '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" class="w-4.5 h-4.5 rtl:rotate-180"> <path d="M11 19L17 12L11 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> <path opacity="0.5" d="M6.99976 19L12.9998 12L6.99976 5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/> </svg>',
@@ -100,6 +93,15 @@
                 //     const random = Math.floor(Math.random() * status.length);
                 //     return status[random];
                 // }
+            }));
+        });
+        document.addEventListener("alpine:init", () => {
+            Alpine.data("dropdown", (initialOpenState = false) => ({
+                open: initialOpenState,
+
+                toggle() {
+                    this.open = !this.open;
+                },
             }));
         });
     </script>

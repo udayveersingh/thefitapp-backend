@@ -14,7 +14,6 @@ class TaskController extends Controller
     {
         $tasks = Task::get();
         return view('Task.index',compact('tasks'));
-        
     }
 
     /**
@@ -38,7 +37,7 @@ class TaskController extends Controller
         $task->task_start_date = $request->input('start_date');
         $task->task_end_date = $request->input('end_date');
         $task->save();
-        return redirect()->route('tasks.index')->with('message','Task added Successfully');
+        return redirect()->route('tasks.index')->with('message','Task added Successfully.');
     }
 
     /**

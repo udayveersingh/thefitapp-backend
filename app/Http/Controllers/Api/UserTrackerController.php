@@ -68,11 +68,18 @@ class UserTrackerController extends Controller
         $user_tracker->calories = $request->calories;
         $user_tracker->move_min = $request->move_min;
         $user_tracker->miles = $request->miles;
+
+        // $minSteps = 5000;
+        // $stepRewards = 0.50;
+        // $firstLevelRewards = 0.25;
+        // $secondLevelRewards = 0.10;
         
-        $minSteps = 5000;
-        $stepRewards = 0.50;
-        $firstLevelRewards = 0.25;
-        $secondLevelRewards = 0.10;
+       //get data of settings
+       $setting = getSettings();
+        $minSteps =  $setting['minimum_steps'];
+        $stepRewards = $setting['step_rewards'];
+        $firstLevelRewards = $setting['first_level_commission'];
+        $secondLevelRewards = $setting['second_level_commission'];
         if($request->step_count >= $minSteps){
             $user_tracker->reward_amount = ( (int) ($request->step_count/$minSteps) ) * $stepRewards;
         }

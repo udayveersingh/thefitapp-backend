@@ -1,5 +1,4 @@
 <x-layout.default>
-
     <script src="{{ asset('/assets/js/simple-datatables.js') }}"></script>
     <div>
         <ul class="flex space-x-2 rtl:space-x-reverse">
@@ -15,11 +14,11 @@
                 <div class="panel">
                     <div class="flex items-center justify-between mb-5">
                         <h5 class="font-semibold text-lg dark:text-white-light">Profile</h5>
-                        <a href="/users/user-account-settings"
+                        <a href="{{route('users.edit', $user->id)}}"
                             class="ltr:ml-auto rtl:mr-auto btn btn-primary p-2 rounded-full">
 
-                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                xmlns="" class="w-5 h-5">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns=""
+                                class="w-5 h-5">
                                 <path opacity="0.5" d="M4 22H20" stroke="currentColor" stroke-width="1.5"
                                     stroke-linecap="round" />
                                 <path
@@ -33,10 +32,16 @@
                     </div>
                     <div class="mb-5">
                         <div class="flex flex-col justify-center items-center">
-                            <img src="{{ asset('/storage/user/' . $profile->user->id . '/profile/' . $profile->profile_pic) }}"
-                                alt="image" class="w-24 h-24 rounded-full object-cover  mb-5" />
+                            {{-- @dd($user); --}}
+                            @if (is_null($user->profile))
+                                <img src="{{ asset('/assets/images/profile.jpg') }}" alt="image"
+                                    class="w-24 h-24 rounded-full object-cover  mb-5" />
+                            @else
+                                <img src="{{ asset('/storage/images/' . $user->profile->profile_pic) }}" alt="image"
+                                    class="w-24 h-24 rounded-full object-cover  mb-5" />
+                            @endif
                             <p class="font-semibold text-primary text-xl">
-                                {{ !empty($profile->user->name) ? ucfirst($profile->user->name) : '' }}</p>
+                                {{ !empty($user->name) ? ucfirst($user->name) : '' }}</p>
                         </div>
                         <ul class="mt-5 flex flex-col max-w-[160px] m-auto space-y-4 font-semibold text-white-dark">
                             <li class="flex items-center gap-2">
@@ -49,8 +54,7 @@
                                         d="M6 8L8.1589 9.79908C9.99553 11.3296 10.9139 12.0949 12 12.0949C13.0861 12.0949 14.0045 11.3296 15.8411 9.79908L18 8"
                                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                                 </svg>
-                                <span
-                                    class="whitespace-nowrap">{{ !empty($profile->user->email) ? $profile->user->email : '' }}</span>
+                                <span class="whitespace-nowrap">{{ !empty($user->email) ? $user->email : '' }}</span>
                             </li>
                             <li class="flex items-center gap-2">
 
@@ -67,41 +71,43 @@
                                         stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                                 </svg>
                                 <span class="whitespace-nowrap"
-                                    dir="ltr">{{ !empty($profile->user->phone) ? $profile->user->phone : '' }}</span>
+                                    dir="ltr">{{ !empty($user->phone) ? $user->phone : '' }}</span>
                             </li>
-                            <li class="flex items-center gap-2">
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="">
-                                    <path
-                                        d="M17 7.82959L18.6965 9.35641C20.239 10.7447 21.0103 11.4389 21.0103 12.3296C21.0103 13.2203 20.239 13.9145 18.6965 15.3028L17 16.8296"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                    <path d="M13.9868 5L12 12.4149L10.0132 19.8297" stroke="currentColor"
-                                        stroke-width="1.5" stroke-linecap="round" />
-                                    <path
-                                        d="M7.00005 7.82959L5.30358 9.35641C3.76102 10.7447 2.98975 11.4389 2.98975 12.3296C2.98975 13.2203 3.76102 13.9145 5.30358 15.3028L7.00005 16.8296"
-                                        stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
-                                </svg>
-                                <span
-                                    class="whitespace-nowrap">{{ !empty($profile->user->refferal_code) ? $profile->user->refferal_code : '' }}</span>
-                            </li>
+                            @if (isset($user->refferal_code) && !is_null($user->refferal_code))
+                                <li class="flex items-center gap-2">
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="">
+                                        <path
+                                            d="M17 7.82959L18.6965 9.35641C20.239 10.7447 21.0103 11.4389 21.0103 12.3296C21.0103 13.2203 20.239 13.9145 18.6965 15.3028L17 16.8296"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                        <path d="M13.9868 5L12 12.4149L10.0132 19.8297" stroke="currentColor"
+                                            stroke-width="1.5" stroke-linecap="round" />
+                                        <path
+                                            d="M7.00005 7.82959L5.30358 9.35641C3.76102 10.7447 2.98975 11.4389 2.98975 12.3296C2.98975 13.2203 3.76102 13.9145 5.30358 15.3028L7.00005 16.8296"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                    </svg>
+                                    <span
+                                        class="whitespace-nowrap">{{ !empty($user->refferal_code) ? $user->refferal_code : '' }}</span>
+                                </li>
+                            @endif
                         </ul>
                     </div>
                 </div>
                 <div class="panel lg:col-span-2 xl:col-span-3">
                     <div x-data="task">
-                            <h5
-                                class="md:absolute md:top-[25px] md:mb-0 mb-5 font-semibold text-lg dark:text-white-light">
-                                Task
-                            </h5>
-                            <table id="taskTable" class="whitespace-nowrap">
-                            </table>
+                        <h5 class="md:absolute md:top-[25px] md:mb-0 mb-5 font-semibold text-lg dark:text-white-light">
+                            Task
+                        </h5>
+                        <table id="taskTable" class="whitespace-nowrap">
+                        </table>
                     </div>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
                 <div class="panel">
-                    {{-- <div class="mb-5">
-                        <h5 class="font-semibold text-lg dark:text-white-light">Summary</h5>
-                    </div> --}}
+                    <div class="mb-5">
+                        <h5 class="font-semibold text-lg dark:text-white-light">Total Wallet Balance</h5>
+                    </div>
                     <div class="space-y-4">
                         <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">
                             <div class="flex items-center justify-between p-4 py-2">
@@ -123,14 +129,14 @@
                                 </div>
                                 <div
                                     class="ltr:ml-4 rtl:mr-4 flex items-start justify-between flex-auto font-semibold">
-                                    <h6 class="text-white-dark text-[13px] dark:text-white-dark">Income <span
-                                            class="block text-base text-[#515365] dark:text-white-light">$92,600</span>
-                                    </h6>
-                                    <p class="ltr:ml-auto rtl:mr-auto text-secondary">90%</p>
+                                    {{-- <h6 class="text-white-dark text-[13px] dark:text-white-dark">My Wallet Balance --}}
+                                        {{-- <span class="block text-base text-[#515365] dark:text-white-light">$92,600</span> --}}
+                                    {{-- </h6> --}}
+                                    <p class="ltr:ml-auto rtl:mr-auto text-secondary">$120</p>
                                 </div>
                             </div>
                         </div>
-                        <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">
+                        {{-- <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">
                             <div class="flex items-center justify-between p-4 py-2">
                                 <div
                                     class="grid place-content-center w-9 h-9 rounded-md bg-warning-light dark:bg-warning text-warning dark:text-warning-light">
@@ -156,178 +162,97 @@
                                     <p class="ltr:ml-auto rtl:mr-auto text-warning">80%</p>
                                 </div>
                             </div>
-                        </div>
+                        </div> --}}
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="flex items-center justify-between mb-10">
-                        <h5 class="font-semibold text-lg dark:text-white-light">Pro Plan</h5>
-                        <a href="javascript:;" class="btn btn-primary">Renew Now</a>
+                    <div class="mb-5">
+                        <h5 class="font-semibold text-lg dark:text-white-light">Total Earning Balance</h5>
                     </div>
-                    <div class="group">
-                        <ul class="list-inside list-disc text-white-dark font-semibold mb-7 space-y-2">
-                            <li>10,000 Monthly Visitors</li>
-                            <li>Unlimited Reports</li>
-                            <li>2 Years Data Storage</li>
-                        </ul>
-                        <div class="flex items-center justify-between mb-4 font-semibold">
-                            <p
-                                class="flex items-center rounded-full bg-dark px-2 py-1 text-xs text-white-light font-semibold">
+                    <div class="space-y-4">
+                        <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">
+                            <div class="flex items-center justify-between p-4 py-2">
+                                <div
+                                    class="grid place-content-center w-9 h-9 rounded-md bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light">
 
-                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                    xmlns="http://www.w3.org/2000/svg" class="w-3 h-3 ltr:mr-1 rtl:ml-1">
-                                    <circle opacity="0.5" cx="12" cy="12" r="10"
-                                        stroke="currentColor" stroke-width="1.5" />
-                                    <path d="M12 8V12L14.5 14.5" stroke="currentColor" stroke-width="1.5"
-                                        stroke-linecap="round" stroke-linejoin="round" />
-                                </svg>
-                                5 Days Left
-                            </p>
-                            <p class="text-info">$25 / month</p>
-                        </div>
-                        <div class="rounded-full h-2.5 p-0.5 bg-dark-light overflow-hidden mb-5 dark:bg-dark-light/10">
-                            <div class="bg-gradient-to-r from-[#f67062] to-[#fc5296] w-full h-full rounded-full relative"
-                                style="width: 65%;"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="panel">
-                    <div class="flex items-center justify-between mb-5">
-                        <h5 class="font-semibold text-lg dark:text-white-light">Payment History</h5>
-                    </div>
-                    <div>
-                        <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                            <div class="flex items-center justify-between py-2">
-                                <h6 class="text-[#515365] font-semibold dark:text-white-dark">March<span
-                                        class="block text-white-dark dark:text-white-light">Pro Membership</span></h6>
-                                <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                    <p class="font-semibold">90%</p>
-                                    <div x-data="dropdown" @click.outside="open = false"
-                                        class="dropdown ltr:ml-4 rtl:mr-4">
-                                        <a href="javascript:;" @click="toggle">
-
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="w-5 h-5 opacity-80 hover:opacity-100">
-                                                <circle cx="5" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                                <circle opacity="0.5" cx="12" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                                <circle cx="19" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                            </svg>
-                                        </a>
-                                        <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
-                                            class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                            <li><a href="javascript:;" @click="toggle">View Invoice</a></li>
-                                            <li><a href="javascript:;" @click="toggle">Download Invoice</a></li>
-                                        </ul>
-                                    </div>
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="" class="w-5 h-5 shrink-0">
+                                        <path
+                                            d="M3.79424 12.0291C4.33141 9.34329 4.59999 8.00036 5.48746 7.13543C5.65149 6.97557 5.82894 6.8301 6.01786 6.70061C7.04004 6 8.40956 6 11.1486 6H12.8515C15.5906 6 16.9601 6 17.9823 6.70061C18.1712 6.8301 18.3486 6.97557 18.5127 7.13543C19.4001 8.00036 19.6687 9.34329 20.2059 12.0291C20.9771 15.8851 21.3627 17.8131 20.475 19.1793C20.3143 19.4267 20.1267 19.6555 19.9157 19.8616C18.7501 21 16.7839 21 12.8515 21H11.1486C7.21622 21 5.25004 21 4.08447 19.8616C3.87342 19.6555 3.68582 19.4267 3.5251 19.1793C2.63744 17.8131 3.02304 15.8851 3.79424 12.0291Z"
+                                            stroke="currentColor" stroke-width="1.5" />
+                                        <path opacity="0.5"
+                                            d="M9 6V5C9 3.34315 10.3431 2 12 2C13.6569 2 15 3.34315 15 5V6"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                        <path opacity="0.5"
+                                            d="M9.1709 15C9.58273 16.1652 10.694 17 12.0002 17C13.3064 17 14.4177 16.1652 14.8295 15"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                    </svg>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                            <div class="flex items-center justify-between py-2">
-                                <h6 class="text-[#515365] font-semibold dark:text-white-dark">February <span
-                                        class="block text-white-dark dark:text-white-light">Pro Membership</span></h6>
-                                <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                    <p class="font-semibold">90%</p>
-                                    <div x-data="dropdown" @click.outside="open = false"
-                                        class="dropdown ltr:ml-4 rtl:mr-4">
-                                        <a href="javascript:;" @click="toggle">
-
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="w-5 h-5 opacity-80 hover:opacity-100">
-                                                <circle cx="5" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                                <circle opacity="0.5" cx="12" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                                <circle cx="19" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                            </svg>
-                                        </a>
-                                        <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
-                                            class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                            <li><a href="javascript:;" @click="toggle">View Invoice</a></li>
-                                            <li><a href="javascript:;" @click="toggle">Download Invoice</a></li>
-                                        </ul>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div>
-                            <div class="flex items-center justify-between py-2">
-                                <h6 class="text-[#515365] font-semibold dark:text-white-dark">January<span
-                                        class="block text-white-dark dark:text-white-light">Pro Membership</span></h6>
-                                <div class="flex items-start justify-between ltr:ml-auto rtl:mr-auto">
-                                    <p class="font-semibold">90%</p>
-                                    <div x-data="dropdown" @click.outside="open = false"
-                                        class="dropdown ltr:ml-4 rtl:mr-4">
-                                        <a href="javascript:;" @click="toggle">
-
-                                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                class="w-5 h-5 opacity-80 hover:opacity-100">
-                                                <circle cx="5" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                                <circle opacity="0.5" cx="12" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                                <circle cx="19" cy="12" r="2"
-                                                    stroke="currentColor" stroke-width="1.5" />
-                                            </svg>
-                                        </a>
-                                        <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
-                                            class="ltr:right-0 rtl:left-0 whitespace-nowrap">
-                                            <li><a href="javascript:;" @click="toggle">View Invoice</a></li>
-                                            <li><a href="javascript:;" @click="toggle">Download Invoice</a></li>
-                                        </ul>
-                                    </div>
+                                <div
+                                    class="ltr:ml-4 rtl:mr-4 flex items-start justify-between flex-auto font-semibold">
+                                    <p class="ltr:ml-auto rtl:mr-auto text-secondary">$100</p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div class="panel">
-                    <div class="flex items-center justify-between mb-5">
-                        <h5 class="font-semibold text-lg dark:text-white-light">Card Details</h5>
+                    <div class="mb-5">
+                        <h5 class="font-semibold text-lg dark:text-white-light">Total Referral Balance</h5>
                     </div>
-                    <div>
-                        <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                            <div class="flex items-center justify-between py-2">
-                                <div class="flex-none">
-                                    <img src="/assets/images/card-americanexpress.svg" alt="image" />
+                    <div class="space-y-4">
+                        <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">
+                            <div class="flex items-center justify-between p-4 py-2">
+                                <div
+                                    class="grid place-content-center w-9 h-9 rounded-md bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light">
+
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="" class="w-5 h-5 shrink-0">
+                                        <path
+                                            d="M3.79424 12.0291C4.33141 9.34329 4.59999 8.00036 5.48746 7.13543C5.65149 6.97557 5.82894 6.8301 6.01786 6.70061C7.04004 6 8.40956 6 11.1486 6H12.8515C15.5906 6 16.9601 6 17.9823 6.70061C18.1712 6.8301 18.3486 6.97557 18.5127 7.13543C19.4001 8.00036 19.6687 9.34329 20.2059 12.0291C20.9771 15.8851 21.3627 17.8131 20.475 19.1793C20.3143 19.4267 20.1267 19.6555 19.9157 19.8616C18.7501 21 16.7839 21 12.8515 21H11.1486C7.21622 21 5.25004 21 4.08447 19.8616C3.87342 19.6555 3.68582 19.4267 3.5251 19.1793C2.63744 17.8131 3.02304 15.8851 3.79424 12.0291Z"
+                                            stroke="currentColor" stroke-width="1.5" />
+                                        <path opacity="0.5"
+                                            d="M9 6V5C9 3.34315 10.3431 2 12 2C13.6569 2 15 3.34315 15 5V6"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                        <path opacity="0.5"
+                                            d="M9.1709 15C9.58273 16.1652 10.694 17 12.0002 17C13.3064 17 14.4177 16.1652 14.8295 15"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                    </svg>
                                 </div>
-                                <div class="flex items-center justify-between flex-auto ltr:ml-4 rtl:mr-4">
-                                    <h6 class="text-[#515365] font-semibold dark:text-white-dark">American Express
-                                        <span class="block text-white-dark dark:text-white-light">Expires on
-                                            12/2025</span>
-                                    </h6>
-                                    <span class="badge bg-success ltr:ml-auto rtl:mr-auto">Primary</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="border-b border-[#ebedf2] dark:border-[#1b2e4b]">
-                            <div class="flex items-center justify-between py-2">
-                                <div class="flex-none">
-                                    <img src="/assets/images/card-mastercard.svg" alt="image" />
-                                </div>
-                                <div class="flex items-center justify-between flex-auto ltr:ml-4 rtl:mr-4">
-                                    <h6 class="text-[#515365] font-semibold dark:text-white-dark">Mastercard <span
-                                            class="block text-white-dark dark:text-white-light">Expires on
-                                            03/2025</span></h6>
+                                <div
+                                    class="ltr:ml-4 rtl:mr-4 flex items-start justify-between flex-auto font-semibold">
+                                    <p class="ltr:ml-auto rtl:mr-auto text-secondary">$50</p>
                                 </div>
                             </div>
                         </div>
-                        <div>
-                            <div class="flex items-center justify-between py-2">
-                                <div class="flex-none">
-                                    <img src="/assets/images/card-visa.svg" alt="image" />
+                    </div>
+                </div>
+                <div class="panel">
+                    <div class="mb-5">
+                        <h5 class="font-semibold text-lg dark:text-white-light">WithDrew Balance</h5>
+                    </div>
+                    <div class="space-y-4">
+                        <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">
+                            <div class="flex items-center justify-between p-4 py-2">
+                                <div
+                                    class="grid place-content-center w-9 h-9 rounded-md bg-secondary-light dark:bg-secondary text-secondary dark:text-secondary-light">
+
+                                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                        xmlns="" class="w-5 h-5 shrink-0">
+                                        <path
+                                            d="M3.79424 12.0291C4.33141 9.34329 4.59999 8.00036 5.48746 7.13543C5.65149 6.97557 5.82894 6.8301 6.01786 6.70061C7.04004 6 8.40956 6 11.1486 6H12.8515C15.5906 6 16.9601 6 17.9823 6.70061C18.1712 6.8301 18.3486 6.97557 18.5127 7.13543C19.4001 8.00036 19.6687 9.34329 20.2059 12.0291C20.9771 15.8851 21.3627 17.8131 20.475 19.1793C20.3143 19.4267 20.1267 19.6555 19.9157 19.8616C18.7501 21 16.7839 21 12.8515 21H11.1486C7.21622 21 5.25004 21 4.08447 19.8616C3.87342 19.6555 3.68582 19.4267 3.5251 19.1793C2.63744 17.8131 3.02304 15.8851 3.79424 12.0291Z"
+                                            stroke="currentColor" stroke-width="1.5" />
+                                        <path opacity="0.5"
+                                            d="M9 6V5C9 3.34315 10.3431 2 12 2C13.6569 2 15 3.34315 15 5V6"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                        <path opacity="0.5"
+                                            d="M9.1709 15C9.58273 16.1652 10.694 17 12.0002 17C13.3064 17 14.4177 16.1652 14.8295 15"
+                                            stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
+                                    </svg>
                                 </div>
-                                <div class="flex items-center justify-between flex-auto ltr:ml-4 rtl:mr-4">
-                                    <h6 class="text-[#515365] font-semibold dark:text-white-dark">Visa <span
-                                            class="block text-white-dark dark:text-white-light">Expires on
-                                            10/2025</span></h6>
+                                <div
+                                    class="ltr:ml-4 rtl:mr-4 flex items-start justify-between flex-auto font-semibold">
+                                    <p class="ltr:ml-auto rtl:mr-auto text-secondary">$30</p>
                                 </div>
                             </div>
                         </div>
