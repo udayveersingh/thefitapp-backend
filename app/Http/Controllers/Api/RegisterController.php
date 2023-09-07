@@ -156,7 +156,7 @@ class RegisterController extends Controller
         auth()->logout();
         return response()->json([
             'success' => true,
-            'message' => 'User successfully signed out.'
+            'message' => 'User logout successfully.'
         ],201);
     }
 }
