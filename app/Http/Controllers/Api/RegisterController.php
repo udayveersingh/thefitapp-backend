@@ -39,9 +39,10 @@ class RegisterController extends Controller
             'pass_code' => 'required',
         ]);
         if ($validator->fails()) {
+            $error = $validator->errors()->first();
             return response()->json([
                 'success' => false,
-                'message' => $validator->errors()], 400);
+                'message' =>  $error], 400);
         }
         $user = User::where([
             'email' => $request->input('user'),
