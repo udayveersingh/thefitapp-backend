@@ -67,10 +67,10 @@ class RegisterController extends Controller
             'access_token' => $token
         ], 201);
 
-        // if (!$token = auth()->attempt($validator->validated())) {
-        //     return response()->json(['error' => 'Unauthorized'], 401);
-        // }
-        // return $this->createNewToken($token);
+        if (!$token = auth()->attempt($validator->validated())) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+        return $this->createNewToken($token);
     }
 
     /**
@@ -112,10 +112,10 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // public function refresh()
-    // {
-    //     return $this->createNewToken(auth()->refresh());
-    // }
+    public function refresh()
+    {
+        return $this->createNewToken(auth()->refresh());
+    }
 
 
 
@@ -136,15 +136,15 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    // protected function createNewToken($token)
-    // {
-    //     return response()->json([
-    //         'access_token' => $token,
-    //         'token_type' => 'bearer',
-    //         'expires_in' => auth()->factory()->getTTL() * 60,
-    //         'user' => auth()->user()
-    //     ]);
-    // }
+    protected function createNewToken($token)
+    {
+        return response()->json([
+            'access_token' => $token,
+            'token_type' => 'bearer',
+            'expires_in' => auth()->factory()->getTTL() * 60,
+            'user' => auth()->user()
+        ]);
+    }
 
 
     public function show($id)
