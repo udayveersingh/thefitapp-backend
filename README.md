@@ -1,155 +1,56 @@
-1. Register New Account
-    Endpoint: https://thefitapp.60dweb.com/api/auth/register
-    Method: POST
-    Request Body: {
-        name: string, // required
-        email: string, // required
-        phone: string, // required
-        passcode: Number, // optional
-    }
+# Introduction
 
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                data: userObject
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
+The Fit App Backend was built with Laravel, from the ground-up with a REST API that makes it easy for developers and sysadmins to interchange the data.
+
+These docs describe how to use the [TheFitApp](http://thefitapp.60dweb.com/) API. We hope you enjoy these docs, and please don't hesitate to [file an issue](https://github.com/udayveersingh/thefitapp-backend/issues/new) if you see anything missing.
 
 
-2. Send OTP After Registration
-    Endpoint: https://thefitapp.60dweb.com/api/create-otp
-    Method: POST
-    Request Body: {
-        email: string, // required
-    }
+## Authorization
 
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                message: "OTP sent successfully"
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
+For Authorization, every user has to be registered on our web application. Developers can integarte the Register and Login API in their mobile apps to let thier users access the features.
 
-3. Verify OTP for User verification
-    Endpoint: https://thefitapp.60dweb.com/api/verify-otp
-    Method: POST
-    Request Body: {
-        user_id: string, // required
-        otp: string, // required
-        login: boolean, // optional, only set true when login is required after OTP verification
-    }
+To authenticate an user, you should first call the `Register` API endpoint.
 
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                message: "OTP sent successfully"
-                data: userObject, // return with the login = true request only
-                access_token: JWTToken, // return with the login = true request only
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
+You should send the request body in `JSON` that will have the details of the user. 
 
+```http
+POST http://thefitapp.60dweb.com/api/auth/register
+```
 
-4. Set New Passcode
-    Endpoint: https://thefitapp.60dweb.com/api/users
-    Method: POST
-    Request Body: {
-        pass_code: number, // required
-    }
+| Parameter | Type | Description |
+| :--- | :--- | :--- |
+| `name` | `string` | **Required**. User Full Name |
+| `email` | `string` | **Required**. User Email Address |
+| `phone` | `number` | **Required**. User Phone Number |
+| `referral_code` | `string` | **Optional**. Referral Code, if have any |
 
-    Headers: {
-        Authorization: Barear JWTToken
-    }
+## Responses
 
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                data: userObject, 
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
+Many API endpoints return the JSON representation of the resources created or edited. However, if an invalid request is submitted, or some other error occurs, Gophish returns a JSON response in the following format:
 
+```javascript
+{
+  "message" : string,
+  "success" : bool,
+  "data"    : string
+}
+```
 
+The `message` attribute contains a message commonly used to indicate errors or, in the case of deleting a resource, success that the resource was properly deleted.
 
-5. Login API
-    Endpoint: https://thefitapp.60dweb.com/api/auth/login
-    Method: POST
-    Request Body: {
-        pass_code: number, // required
-        user: string, // required, this must be either email or phone number.
-    }
+The `success` attribute describes if the transaction was successful or not.
 
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                data: userObject, 
-                access_token: JWTToken
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
+The `data` attribute contains any other metadata associated with the response. This will be an escaped string containing JSON data.
 
+## Status Codes
 
-6. Get User Profile
-    Endpoint: https://thefitapp.60dweb.com/api/users
-    Method: GET
-    Headers: {
-        Authorization: Barear JWTToken
-    }
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                data: userObject, 
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
+API returns the following status codes in its API:
 
-7. Update User Profile
-    Endpoint: https://thefitapp.60dweb.com/api/user-update
-    Method: POST
-    Request Body: {
-        pass_code: number, // optional
-        phone: number, // optional
-        name: string, // optional
-        profile_pic: file, // optional
-    }
-    Headers: {
-        Authorization: Barear JWTToken
-    }
-    Response Body: 
-        IF SUCCESS:
-            {
-                success:true,
-                data: userObject, 
-            }
-        IF Failed:
-            {
-                success: false,
-                message: errorMessage
-            }
-            
+| Status Code | Description |
+| :--- | :--- |
+| 200 | `OK` |
+| 201 | `CREATED` |
+| 400 | `BAD REQUEST` |
+| 400 | `UNAUTHORIZED` |
+| 404 | `NOT FOUND` |
+| 500 | `INTERNAL SERVER ERROR` |
