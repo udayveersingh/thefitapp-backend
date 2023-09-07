@@ -66,11 +66,6 @@ class RegisterController extends Controller
             'data' => $user,
             'access_token' => $token
         ], 201);
-
-        if (!$token = auth()->attempt($validator->validated())) {
-            return response()->json(['error' => 'Unauthorized'], 401);
-        }
-        return $this->createNewToken($token);
     }
 
     /**
@@ -139,16 +134,26 @@ class RegisterController extends Controller
     protected function createNewToken($token)
     {
         return response()->json([
-            'access_token' => $token,
-            'token_type' => 'bearer',
-            'expires_in' => auth()->factory()->getTTL() * 60,
-            'user' => auth()->user()
-        ]);
+                'success' => true,
+                'data' => auth()->user(),
+                'access_token' => $token
+                // 'expires_in' => auth()->factory()->getTTL() * 60,
+            ], 201);
     }
-
 
     public function show($id)
     {
         return response()->json([]);
+    }
+
+
+    /**
+     * Log the user out (Invalidate the token).
+     *
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function logout() {
+        auth()->logout();
+        return response()->json(['message' => 'User successfully signed out.']);
     }
 }
