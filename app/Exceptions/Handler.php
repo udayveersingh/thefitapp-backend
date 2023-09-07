@@ -55,9 +55,8 @@ class Handler extends ExceptionHandler
         if ($e instanceof AuthenticationException) {
             return response()->json(
                 [
-                    'type' => 'error',
-                    'status' => Response::HTTP_UNAUTHORIZED,
-                    'message' => 'Access Token expires',
+                    'success' => false,
+                    'message' => 'Access Token expired',
                 ],
                 Response::HTTP_UNAUTHORIZED
             );
