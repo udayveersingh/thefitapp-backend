@@ -56,7 +56,7 @@ class Handler extends ExceptionHandler
             return response()->json(
                 [
                     'success' => false,
-                    'message' => 'Access Token expired',
+                    'message' => 'Access Token Invalid',
                 ],
                 Response::HTTP_UNAUTHORIZED
             );
