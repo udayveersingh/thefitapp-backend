@@ -1,34 +1,28 @@
 # Introduction
 
-Gophish was built from the ground-up with a JSON API that makes it easy for developers and sysadmins to automate simulated phishing campaigns.
+The Fit App Backend was built with Laravel, from the ground-up with a REST API that makes it easy for developers and sysadmins to interchange the data.
 
-These docs describe how to use the [Gophish](https://getgophish.com) API. We hope you enjoy these docs, and please don't hesitate to [file an issue](https://github.com/gophish/gophish/issues/new) if you see anything missing.
+These docs describe how to use the [TheFitApp](http://thefitapp.60dweb.com/) API. We hope you enjoy these docs, and please don't hesitate to [file an issue](https://github.com/udayveersingh/thefitapp-backend/issues/new) if you see anything missing.
 
-{% hint style="info" %}
-**Is Python your language of choice?** If so, we have a [fully-supported Python API client](https://docs.getgophish.com/python-api-client/) that makes working with the Gophish API a piece of cake!
-{% endhint %}
-
-## Use Cases
-
-There are many reasons to use the Gophish API. The most common use case is to gather report information for a given campaign, so that you can build custom reports in software you're most familiar with, such as Excel or Numbers.
-
-However, automating the creation of campaigns and campaign attributes such as templates, landing pages, and more provides the ability to create a fully automated phishing simulation program. This would allow campaigns to be run throughout the year automatically. This also allows the Gophish administrator to be included in the campaigns, since they wouldn't know exactly which day it would start!
 
 ## Authorization
 
-All API requests require the use of a generated API key. You can find your API key, or generate a new one, by navigating to the /settings endpoint, or clicking the “Settings” sidebar item.
+For Authorization, every user has to be registered on our web application. Developers can integarte the Register and Login API in their mobile apps to let thier users access the features.
 
-To authenticate an API request, you should provide your API key in the `Authorization` header.
+To authenticate an user, you should first call the `Register` API endpoint.
 
-Alternatively, you may append the `api_key=[API_KEY]` as a GET parameter to authorize yourself to the API. But note that this is likely to leave traces in things like your history, if accessing the API through a browser.
+You should send the request body in `JSON` that will have the details of the user. 
 
 ```http
-GET /api/campaigns/?api_key=12345678901234567890123456789012
+GET http://thefitapp.60dweb.com/api/auth/register
 ```
 
 | Parameter | Type | Description |
 | :--- | :--- | :--- |
-| `api_key` | `string` | **Required**. Your Gophish API key |
+| `name` | `string` | **Required**. User Full Name |
+| `email` | `string` | **Required**. User Email Address |
+| `phone` | `number` | **Required**. User Phone Number |
+| `referral_code` | `string` | **Optional**. Referral Code, if have any |
 
 ## Responses
 
@@ -50,12 +44,13 @@ The `data` attribute contains any other metadata associated with the response. T
 
 ## Status Codes
 
-Gophish returns the following status codes in its API:
+API returns the following status codes in its API:
 
 | Status Code | Description |
 | :--- | :--- |
 | 200 | `OK` |
 | 201 | `CREATED` |
 | 400 | `BAD REQUEST` |
+| 400 | `UNAUTHORIZED` |
 | 404 | `NOT FOUND` |
 | 500 | `INTERNAL SERVER ERROR` |
