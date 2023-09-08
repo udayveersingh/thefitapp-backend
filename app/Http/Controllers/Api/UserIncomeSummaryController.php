@@ -22,9 +22,11 @@ class UserIncomeSummaryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index($transaction_type)
     {
-        return response()->json(['success' => 'true'], 200);
+        $user = auth()->user();
+        $user_income_summaries = UserIncomeSummary::where('user_id','=',$user->id,)->where('transaction_type','=', $transaction_type)->get();
+        return response()->json(['success' => true, 'data' => $user_income_summaries ], 200);
     }
 
     /**
