@@ -22,7 +22,7 @@
             <div class="sm:flex justify-between items-center gap-5 md:gap-20">
                 <label for="logo">Logo</label>
                 <input id="logo" type="file" class="form-input text-base" name="logo" />
-                @if (!is_null($settings['logo']))
+                @if (!empty($settings['logo']))
                     <img class="w-20" src="{{ asset('storage/settings/logo/' . $settings['logo']) }}" alt="image" />
                 @endif
             </div>
