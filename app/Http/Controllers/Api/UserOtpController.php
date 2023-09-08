@@ -50,7 +50,7 @@ class UserOtpController extends Controller
             if(env('APP_ENV') != "local"){
                 Mail::to($request->email)->send(new SendOTPEmailNotification($user, $otpcode));
             }
-            return response()->json(['success' => true, "message" => "OTP sent successfully"], 200);
+            return response()->json(['success' => true, "message" => "OTP sent successfully", "data" => $user], 200);
         }else{
             return response()->json(['success' => false, "message" => "Failed to send OTP"], 400);
         }
