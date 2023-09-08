@@ -20,7 +20,7 @@ return new class extends Migration
             $table->double('reward_amount', 8, 2)->nullable();
             $table->string('calories')->nullable();
             $table->decimal('miles',10,7)->nullable();
-            $table->time('move_min')->nullable();
+            $table->integer('move_min')->nullable();
             $table->timestamps();
         });
     }

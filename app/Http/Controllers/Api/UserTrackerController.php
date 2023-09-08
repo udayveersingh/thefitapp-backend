@@ -34,7 +34,7 @@ class UserTrackerController extends Controller
         }
         $user_tracker = UserTracker::where('user_id', '=', $user->id)->get();
         if (!empty($user_tracker)) {
-            return response()->json(['success' => true, 'user_tracker' => $user_tracker], 200);
+            return response()->json(['success' => true, 'data' => $user_tracker], 200);
         } else {
             return response()->json(['success' => 'true'], 200);
         }
@@ -123,7 +123,7 @@ class UserTrackerController extends Controller
                     }
                 }
             }
-            return response()->json(['success' => true, 'user_tracker' => $user_tracker], 200);
+            return response()->json(['success' => true, 'data' => $user_tracker], 200);
         }else{
             return response()->json(['success' => false, 'message' => "Invalid Token"], 401);
         }

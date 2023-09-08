@@ -40,28 +40,28 @@ class UserIncomeSummaryController extends Controller
      */
     public function store(Request $request)
     {
-        $validator = Validator::make($request->all(), [
-            'credit_amount' => 'required',
-            'debit_amount' => 'required',
-            'transaction_type' => 'required',
-            'transaction_date' => 'required',
-        ]);
-        if ($validator->fails()) {
-            return response()->json($validator->errors()->first(), 400);
-        }
-        $user = auth()->user();
-        if ($user) {
-            $user_income_summary = UserIncomeSummary::create([
-                'user_id' => $user->id,
-                'credit_amount' => $request->credit_amount,
-                'debit_amount' => $request->debit_amount,
-                'transaction_type' => $request->transaction_type,
-                'transaction_date' => $request->transaction_date,
-            ]);
-            return response()->json(['success' => true, 'data' => $user_income_summary], 200);
-        } else {
-            return response()->json(['success' => false, 'message' => "Invalid Token"], 401);
-        }
+        // $validator = Validator::make($request->all(), [
+        //     'credit_amount' => 'required',
+        //     'debit_amount' => 'required',
+        //     'transaction_type' => 'required',
+        //     'transaction_date' => 'required',
+        // ]);
+        // if ($validator->fails()) {
+        //     return response()->json($validator->errors()->first(), 400);
+        // }
+        // $user = auth()->user();
+        // if ($user) {
+        //     $user_income_summary = UserIncomeSummary::create([
+        //         'user_id' => $user->id,
+        //         'credit_amount' => $request->credit_amount,
+        //         'debit_amount' => $request->debit_amount,
+        //         'transaction_type' => $request->transaction_type,
+        //         'transaction_date' => $request->transaction_date,
+        //     ]);
+        //     return response()->json(['success' => true, 'data' => $user_income_summary], 200);
+        // } else {
+        //     return response()->json(['success' => false, 'message' => "Invalid Token"], 401);
+        // }
     }
 
     /**
