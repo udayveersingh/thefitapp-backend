@@ -26,7 +26,14 @@ class UserIncomeSummaryController extends Controller
     {
         $user = auth()->user();
         $user_income_summaries = UserIncomeSummary::where('user_id','=',$user->id,)->where('transaction_type','=', $transaction_type)->get();
-        return response()->json(['success' => true, 'data' => $user_income_summaries ], 200);
+        $response = [
+            'success' => true,
+            'total' => count($user_income_summaries),
+            'limit' => 10, // $request->limit
+            'page' => 1, // // $request->page
+            'data' => $user_income_summaries,
+        ];
+        return response()->json(['success' => true, $response], 200);
     }
 
     /**

@@ -32,7 +32,14 @@ class UserTaskController extends Controller
         }else{
             
             $tasks = Task::get();
-            return response()->json(['success' => true,'data' => $tasks], 200);
+            $response = [
+                'success' => true,
+                'total' => count($tasks),
+                'limit' => 10, // $request->limit
+                'page' => 1, // // $request->page
+                'data' => $tasks,
+            ];
+            return response()->json(['success' => true, $response], 200);
         }
     }
 
