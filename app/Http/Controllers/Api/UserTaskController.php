@@ -39,7 +39,7 @@ class UserTaskController extends Controller
                 'page' => 1, // // $request->page
                 'data' => $tasks,
             ];
-            return response()->json(['success' => true, $response], 200);
+            return response()->json($response, 200);
         }
     }
 

@@ -33,7 +33,7 @@ class UserIncomeSummaryController extends Controller
             'page' => 1, // // $request->page
             'data' => $user_income_summaries,
         ];
-        return response()->json(['success' => true, $response], 200);
+        return response()->json($response, 200);
     }
 
     /**
