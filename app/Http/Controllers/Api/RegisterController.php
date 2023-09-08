@@ -86,13 +86,32 @@ class RegisterController extends Controller
                 'message' => $validator->errors()->first()
             ], 400);
         }
-        $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'phone' => $request->phone,
-            'refferal_code' => ($request->refferal_code) ? $request->refferal_code : null,
-        ]);
 
+        $parentId = "";
+        if ($request->referal_code) {
+            $userId = User::where('referal_code', '=', $request->referal_code)->value('id');
+            if (!is_null($userId)) {
+                $parentId = $userId;
+            } else {
+                return response()->json(['success' => true, "message" => "Invalid Referal Code!"], 400);
+            }
+        }
+        $randInx = codeGenerate();
+        $user = User::where('referal_code', '=', $randInx)->first();
+        if (is_null($user)) {
+            $user = User::create([
+                'name' => $request->name,
+                'email' => $request->email,
+                'phone' => $request->phone,
+                'referal_code' => $randInx,
+                'parent_id' => $parentId,
+            ]);
+        } else {
+            return response()->json([
+                'success' => false,
+                'message' => "The Referal code has already been taken."
+            ], 400);
+        }
         // $token = JWTAuth::fromUser($user);
         // $token = auth::attempt($newUser);
 
@@ -134,11 +153,11 @@ class RegisterController extends Controller
     protected function createNewToken($token)
     {
         return response()->json([
-                'success' => true,
-                'data' => auth()->user(),
-                'access_token' => $token
-                // 'expires_in' => auth()->factory()->getTTL() * 60,
-            ], 201);
+            'success' => true,
+            'data' => auth()->user(),
+            'access_token' => $token
+            // 'expires_in' => auth()->factory()->getTTL() * 60,
+        ], 201);
     }
 
     public function show($id)
@@ -152,11 +171,12 @@ class RegisterController extends Controller
      *
      * @return \Illuminate\Http\JsonResponse
      */
-    public function logout() {
+    public function logout()
+    {
         auth()->logout();
         return response()->json([
             'success' => true,
             'message' => 'User logout successfully.'
-        ],201);
+        ], 201);
     }
 }

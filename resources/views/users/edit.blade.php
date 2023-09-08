@@ -1,5 +1,19 @@
 <x-layout.default>
 
+    @if (session()->has('message'))
+        <div class="flex items-center p-3.5 rounded text-success bg-success-light dark:bg-success-dark-light mb-2">
+            <span class="ltr:pr-2 rtl:pl-2"><strong class="ltr:mr-1 rtl:ml-1">
+                </strong>{{ session()->get('message') }}</span>
+            <button type="button" class="ltr:ml-auto rtl:mr-auto hover:opacity-80">
+                <svg xmlns="" width="24px" height="24px" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" class="w-5 h-5">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>  
+            </button>
+        </div>
+    @endif
+
     <div>
         <ul class="flex space-x-2 rtl:space-x-reverse">
             <li>
@@ -11,7 +25,7 @@
         </ul>
         <div class="pt-5">
             <div class="flex items-center justify-between mb-5">
-                <h5 class="font-semibold text-lg dark:text-white-light">Settings</h5>
+                <h5 class="font-semibold text-lg dark:text-white-light">User Profile</h5>
             </div>
             <div x-data="{ tab: 'profile' }">
                 <ul
@@ -98,8 +112,9 @@
                 </ul>
                 <template x-if="tab === 'profile'">
                     <div>
-                        <form
+                        <form method="POST" action="{{ route('user.update', $user->id) }}"
                             class="border border-[#ebedf2] dark:border-[#191e3a] rounded-md p-4 mb-5 bg-white dark:bg-[#0e1726]">
+                            @csrf
                             <h6 class="text-lg font-bold mb-5">Profile Information</h6>
                             <div class="flex flex-col sm:flex-row">
                                 <div class="ltr:sm:mr-4 rtl:sm:ml-4 w-full sm:w-2/12 mb-5">
@@ -111,7 +126,7 @@
                                             alt="image"
                                             class="w-20 h-20 md:w-32 md:h-32 rounded-full object-cover mx-auto" />
                                     @endif
-                                    <div x-data="modal">
+                                    {{-- <div x-data="modal">
                                         <!-- button -->
                                         <button type="button" class="btn btn-success mt-2" @click="toggle">Change Profile Photo</button>
                                         <!-- modal -->
@@ -145,42 +160,33 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> --}}
+                                    {{-- <input type="text" placeholder="Some Text..." class="form-input" required /> --}}
                                 </div>
                                 <!-- profile -->
                                 <div class="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-5">
                                     <div>
                                         <label for="name">Name</label>
                                         <input id="name" type="text" placeholder="" class="form-input"
-                                            value="{{ $user->name }}" />
+                                            value="{{ $user->name }}" name="name" />
                                     </div>
                                     <div>
                                         <label for="phone">Phone</label>
                                         <input id="phone" type="text" placeholder="" class="form-input"
-                                            value="{{ $user->phone }}" readonly />
+                                            value="{{ $user->phone }}" name="phone" />
                                     </div>
                                     <div>
                                         <label for="email">Email</label>
                                         <input id="email" type="email" class="form-input"
-                                            value="{{ $user->email }}" readonly />
+                                            value="{{ $user->email }}" name="email" />
                                     </div>
-                                    <div>
+                                    {{-- <div>
                                         <label for="referral_code">Referral Code</label>
                                         <input id="referral_code" type="text" placeholder="" class="form-input"
                                             value="{{ $user->referral_code }}" />
-                                    </div>
-                                    <div>
-                                        <label for="device_id">Device Id</label>
-                                        <input id="device_id" type="text" class="form-input"
-                                            value="{{ $user->device_id }}" />
-                                    </div>
-                                    <div>
-                                        <label for="device_type">Device Type</label>
-                                        <input id="device_type" type="text" placeholder="" class="form-input"
-                                            value="{{ $user->device_type }}" />
-                                    </div>
+                                    </div> --}}
                                     <div class="sm:col-span-2 mt-3">
-                                        <button type="button" class="btn btn-primary">Save</button>
+                                        <button type="submit" value="submit" class="btn btn-primary">Save</button>
                                     </div>
                                 </div>
                             </div>

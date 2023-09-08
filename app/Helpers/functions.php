@@ -21,3 +21,13 @@ if(!function_exists('getSettings')){
          return Setting::pluck('value', 'key');
     }
 }
+
+if(!function_exists('codeGenerate')){
+function codeGenerate() {
+    $randCode  = (string)mt_rand(1000,99999);
+    $randChar  = rand(65,90);
+    $randInx   = rand(0,3);
+    $randCode[$randInx] = chr($randChar);
+    return $randCode;
+  }
+}

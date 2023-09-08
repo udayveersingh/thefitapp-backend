@@ -1,4 +1,9 @@
 <x-layout.default>
+<style>
+    .dataTable-container {
+    overflow: visible;
+}
+</style>
     <script src="{{ asset('/assets/js/simple-datatables.js') }}"></script>
     @if (session()->has('message'))
         <div class="flex items-center p-3.5 rounded text-danger bg-danger-light dark:bg-danger-dark-light mb-2">
@@ -34,14 +39,26 @@
                                     ['<a href="{{ route('user.detail', $user->id) }}" class="text-primary hover:underline">{{ $user->name }}</a>',
                                         '{{ $user->email }}', '{{ $user->phone }}',
                                         '{{ $user->referal_code }}',
-                                        '<div x-data="dropdown" @click.outside="open= false" class="dropdown ltr:ml-4 rtl:mr-4"><a href="javascript:;" @click="toggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"' +
-                                        'xmlns="" class="w-5 h-5 opacity-80 hover:opacity-100">' +
-                                        '<circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5" /><circle opacity="0.5" cx="12" cy="12" r="2"' +
-                                        'stroke="currentColor" stroke-width="1.5" /><circle cx="19" cy="12" r="2"'+
-                                        'stroke="currentColor" stroke-width="1.5"/></svg></a><ul x-cloak x-show="open" x-transition x-transition.duration.300ms'+
-                                        'class="ltr:right-0 rtl:left-0 whitespace-nowrap"><li><a href="javascript:;" @click="toggle">View User Tracker</a></li>'+
-                                        '<li><a href="javascript:;" @click="toggle">User Earning</a></li></ul></div>',
-                                    ],
+                                        `<div class="flex items-center justify-center"><div x-data="dropdown" @click.outside="open = false" class="dropdown"><button
+                                         class="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
+                                         @click="toggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                         xmlns="" class="w-6 h-6 opacity-70">
+                                         <circle cx="5" cy="12" r="2"
+                                         stroke="currentColor" stroke-width="1.5"></circle>
+                                         <circle opacity="0.5" cx="12" cy="12" r="2"
+                                         stroke="currentColor" stroke-width="1.5"></circle>
+                                         <circle cx="19" cy="12" r="2"
+                                         stroke="currentColor" stroke-width="1.5"></circle>
+                                         </svg></button>
+                                         <ul x-cloak x-show="open" x-transition x-transition.duration.300ms
+                                            class="ltr:right-0 rtl:left-0 bottom-full !mt-0 mb-1 whitespace-nowrap">
+                                            <li><a href="{{route('users.edit',$user->id)}}" @click="toggle">User Edit</a></li>
+                                            <li><a href="javascript:;" @click="toggle">User Tracker</a></li>
+                                            <li><a href="javascript:;" @click="toggle">User Earning</a></li>    
+                                         </ul>
+                                    </div>
+                                </div>`,        
+                                ],
                                 @endforeach
                             ]
                         },
@@ -95,16 +112,7 @@
                 // }
             }));
         });
-        document.addEventListener("alpine:init", () => {
-            Alpine.data("dropdown", (initialOpenState = false) => ({
-                open: initialOpenState,
-
-                toggle() {
-                    this.open = !this.open;
-                },
-            }));
-        });
-    </script>
+        </script>
 
 
 </x-layout.default>

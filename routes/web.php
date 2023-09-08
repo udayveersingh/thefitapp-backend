@@ -6,7 +6,6 @@ use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 
-
 Route::view('/', 'auth.user-signin')->middleware('is_admin');
 Route::get('/dashboard', [LoginController::class, 'dashboard'])->name('dashboard')->middleware('is_admin'); 
 Route::get('/login', [LoginController::class, 'Login'])->name('login');
@@ -18,6 +17,7 @@ Route::get('/users',[UserController::class,'index'])->name('users');
 Route::get('/users/{id}/edit',[UserController::class,'edit'])->name('users.edit');
 Route::get('/user/{id}/detail/',[UserController::class,'userDetail'])->name('user.detail');
 Route::get('/user/trackers',[UserController::class,'trackers'])->name('user.trackers');
+Route::post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
 
 //Task 
 Route::get('/tasks', [App\Http\Controllers\TaskController::class,'index'])->name('tasks.index');
