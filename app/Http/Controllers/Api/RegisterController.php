@@ -78,7 +78,7 @@ class RegisterController extends Controller
         $validator = Validator::make($request->all(), [
             'name' => 'required|string|between:2,100',
             'email' => 'required|string|email|max:100|unique:users',
-            'phone' => 'required',
+            'phone' => 'required|string|unique:users',
         ]);
         if ($validator->fails()) {
             return response()->json([
@@ -88,12 +88,12 @@ class RegisterController extends Controller
         }
 
         $parentId = "";
-        if ($request->referal_code) {
-            $userId = User::where('referal_code', '=', $request->referal_code)->value('id');
+        if ($request->referral_code) {
+            $userId = User::where('referral_code', '=', $request->referral_code)->value('id');
             if (!is_null($userId)) {
                 $parentId = $userId;
             } else {
-                return response()->json(['success' => true, "message" => "Invalid Referal Code!"], 400);
+                return response()->json(['success' => true, "message" => "Invalid Referral Code!"], 400);
             }
         }
         $referralCode = GenerateReferralCode();
@@ -102,7 +102,7 @@ class RegisterController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'phone' => $request->phone,
-            'referal_code' => $referralCode,
+            'referral_code' => $referralCode,
             'parent_id' => $parentId,
         ]);
         // $token = JWTAuth::fromUser($user);

@@ -73,7 +73,7 @@
                                 <span class="whitespace-nowrap"
                                     dir="ltr">{{ !empty($user->phone) ? $user->phone : '' }}</span>
                             </li>
-                            @if (isset($user->refferal_code) && !is_null($user->refferal_code))
+                            @if (isset($user->referral_code) && !is_null($user->referral_code))
                                 <li class="flex items-center gap-2">
                                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
                                         xmlns="">
@@ -87,7 +87,7 @@
                                             stroke="currentColor" stroke-width="1.5" stroke-linecap="round" />
                                     </svg>
                                     <span
-                                        class="whitespace-nowrap">{{ !empty($user->refferal_code) ? $user->refferal_code : '' }}</span>
+                                        class="whitespace-nowrap">{{ !empty($user->referral_code) ? $user->referral_code : '' }}</span>
                                 </li>
                             @endif
                         </ul>

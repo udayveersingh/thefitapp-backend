@@ -38,7 +38,7 @@
                                 @foreach ($users as $user)
                                     ['<a href="{{ route('user.detail', $user->id) }}" class="text-primary hover:underline">{{ $user->name }}</a>',
                                         '{{ $user->email }}', '{{ $user->phone }}',
-                                        '{{ $user->referal_code }}',
+                                        '{{ $user->referral_code }}',
                                         `<div class="flex items-center justify-center"><div x-data="dropdown" @click.outside="open = false" class="dropdown"><button
                                          class="btn p-0 rounded-none border-0 shadow-none dropdown-toggle text-black dark:text-white-dark hover:text-primary dark:hover:text-primary"
                                          @click="toggle"><svg width="24" height="24" viewBox="0 0 24 24" fill="none"

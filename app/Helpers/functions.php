@@ -29,8 +29,8 @@ function GenerateReferralCode() {
     $randChar  = rand(65,90);
     $randInx   = rand(0,3);
     $randCode[$randInx] = chr($randChar);
-    
-    $user = User::where('referal_code', '=', $randCode)->first();
+
+    $user = User::where('referral_code', '=', $randCode)->first();
     if(!is_null($user)){
         return GenerateReferralCode();
     }else{

@@ -3,8 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use App\Models\UserIncomeSummary;
-use App\Models\UserRefferal;
 use Illuminate\Http\Request;
 use App\Models\UserTracker;
 use Illuminate\Support\Facades\Validator;
@@ -97,25 +97,24 @@ class UserTrackerController extends Controller
                 $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
                 $userIncomeSummary->save();
 
-                $firstParentReferral = UserRefferal::where(['user_id' => $user->id])->first();
-                if(!is_null($firstParentReferral)){
+                if($user->parent_id){
+                    $firstReferralUser = User::where(['parent_id' => $user->parent_id])->first();
 
-                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstParentReferral->parent_id, 'income_date' => $request->step_count_date])->first();
+                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id, 'income_date' => $request->step_count_date])->first();
                     if(is_null($parentIncomeSummary)){
                         $parentIncomeSummary = new UserIncomeSummary();
-                        $parentIncomeSummary->user_id = $firstParentReferral->parent_id;
+                        $parentIncomeSummary->user_id = $firstReferralUser->id;
                         $parentIncomeSummary->income_date = $request->step_count_date;
                         $parentIncomeSummary->income_type = "Referral";
                     }
                     $parentIncomeSummary->credit_amount = ( (int) ($request->step_count/$minSteps) ) * $firstLevelRewards;
                     $parentIncomeSummary->save();
 
-                    $secondParentReferral = UserRefferal::where(['user_id' => $firstParentReferral->parent_id])->first();
-                    if(!is_null($secondParentReferral)){
-                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $secondParentReferral->parent_id, 'income_date' => $request->step_count_date])->first();
+                    if($firstReferralUser->parent_id){
+                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id, 'income_date' => $request->step_count_date])->first();
                         if(is_null($secondParentIncomeSummary)){
                             $secondParentIncomeSummary = new UserIncomeSummary();
-                            $secondParentIncomeSummary->user_id = $secondParentReferral->parent_id;
+                            $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
                             $secondParentIncomeSummary->income_date = $request->step_count_date;
                             $secondParentIncomeSummary->income_type = "Referral";
                         }
