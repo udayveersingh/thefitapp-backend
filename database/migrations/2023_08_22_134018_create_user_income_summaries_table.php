@@ -19,6 +19,7 @@ return new class extends Migration
             $table->double('debit_amount', 8, 2)->nullable();
             $table->enum('transaction_type',['Refferal','StepTracker','WithDrawl'])->nullable();
             $table->dateTime('transaction_date')->nullable();
+            $table->integer('steps')->nullable();
             $table->timestamps();
         });
     }

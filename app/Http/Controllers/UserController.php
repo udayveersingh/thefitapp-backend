@@ -6,6 +6,7 @@ use App\Models\Profile;
 use App\Models\Task;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -70,6 +71,11 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
+       Validator::make($request->all(), [
+            'name' => 'required',
+            'email' => 'required',
+            'phone' => 'required',
+        ]);
         $user = User::find($id);
         $user->name = $request->input('name');
         $user->email = $request->input('email');

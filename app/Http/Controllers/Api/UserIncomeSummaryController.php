@@ -22,17 +22,46 @@ class UserIncomeSummaryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index($transaction_type)
+    public function index(Request $request)
     {
         $user = auth()->user();
-        $user_income_summaries = UserIncomeSummary::where('user_id','=',$user->id,)->where('transaction_type','=', $transaction_type)->get();
+        if(is_null($user)){
+            return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
+        }
+
+        $limit = $request->limit ? $request->limit : 10;
+        $page = $request->page ? $request->page : 1;
+        $offset = (($page-1)* $limit);
+        $orderBy = $request->orderby ? $request->orderby : 'transaction_date';
+        $order = $request->order ? $request->order : 'DESC';
+
+        $rewardsQuery = UserIncomeSummary::where('user_id','=',$user->id);
+
+        if($request->transaction_date){
+            $rewardsQuery->whereDate('transaction_date','=',$request->transaction_date);
+        }
+        if($request->transaction_type){
+            $rewardsQuery->where('transaction_type','=',$request->transaction_type);
+        }
+
+        $totalRows = $rewardsQuery->count();
+
+        $rewardsQuery->orderBy($orderBy, $order);
+
+        if($limit > 0){
+            $rewardsQuery->skip($offset)->limit($limit);
+        }
+
+        $rewards = $rewardsQuery->get();
+
         $response = [
             'success' => true,
-            'total' => count($user_income_summaries),
-            'limit' => 10, // $request->limit
-            'page' => 1, // // $request->page
-            'data' => $user_income_summaries,
+            'total' => $totalRows,
+            'limit' => $limit, // $request->limit
+            'page' => $page, // // $request->page
+            'data' => $rewards // // $request->page
         ];
+
         return response()->json($response, 200);
     }
 
@@ -103,5 +132,28 @@ class UserIncomeSummaryController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+    
+    
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function userEarnings(Request $request)
+    {
+        // dd($request->all());
+        $user = auth()->user();
+        if(is_null($user)){
+            return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
+        }
+        $healthRewards = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','StepTracker')->sum('credit_amount');
+        $referralRewards = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','Referral')->sum('credit_amount');
+        $response = [
+            "success" => true,
+            "data" => [
+                "health" => $healthRewards,
+                "referral" => $referralRewards,
+            ],
+        ];
+        return response()->json($response, 200);
     }
 }

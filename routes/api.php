@@ -40,5 +40,6 @@ Route::post('/verify-otp',[App\Http\Controllers\Api\UserOtpController::class,'ve
 Route::resource('/user-profile',App\Http\Controllers\Api\UserProfileController::class);
 Route::resource('/user-tracker',App\Http\Controllers\Api\UserTrackerController::class);
 Route::resource('/tasks',App\Http\Controllers\Api\UserTaskController::class);
-Route::resource('/user-income-summary/{transaction_type}',App\Http\Controllers\Api\UserIncomeSummaryController::class);
+Route::resource('/rewards',App\Http\Controllers\Api\UserIncomeSummaryController::class);
+Route::get('/user-earnings',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userEarnings']);
 

@@ -95,6 +95,7 @@ class UserTrackerController extends Controller
                     $userIncomeSummary->transaction_type = "StepTracker";
                 }
                 $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
+                $userIncomeSummary->steps = $user_tracker->step_count;
                 $userIncomeSummary->save();
 
                 if($user->parent_id){
