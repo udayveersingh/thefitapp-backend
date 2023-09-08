@@ -15,10 +15,10 @@ return new class extends Migration
             $table->id();
             $table->bigInteger('user_id')->unsigned()->nullable();
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
-            $table->string('step_count')->nullable();
+            $table->integer('step_count')->nullable();
             $table->date('step_count_date')->nullable();
             $table->double('reward_amount', 8, 2)->nullable();
-            $table->string('calories')->nullable();
+            $table->integer('calories')->nullable();
             $table->decimal('miles',10,7)->nullable();
             $table->integer('move_min')->nullable();
             $table->timestamps();
