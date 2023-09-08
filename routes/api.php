@@ -39,6 +39,6 @@ Route::post('/create-otp',[App\Http\Controllers\Api\UserOtpController::class,'cr
 Route::post('/verify-otp',[App\Http\Controllers\Api\UserOtpController::class,'verify']);
 Route::resource('/user-profile',App\Http\Controllers\Api\UserProfileController::class);
 Route::resource('/user-tracker',App\Http\Controllers\Api\UserTrackerController::class);
-Route::resource('/user-task',App\Http\Controllers\Api\UserTaskController::class);
+Route::resource('/tasks',App\Http\Controllers\Api\UserTaskController::class);
 Route::resource('/user-income-summary',App\Http\Controllers\Api\UserIncomeSummaryController::class);
 
