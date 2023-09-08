@@ -100,23 +100,23 @@ class UserTrackerController extends Controller
                 if($user->parent_id){
                     $firstReferralUser = User::where(['parent_id' => $user->parent_id])->first();
 
-                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id, 'income_date' => $request->step_count_date])->first();
+                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                     if(is_null($parentIncomeSummary)){
                         $parentIncomeSummary = new UserIncomeSummary();
                         $parentIncomeSummary->user_id = $firstReferralUser->id;
-                        $parentIncomeSummary->income_date = $request->step_count_date;
-                        $parentIncomeSummary->income_type = "Referral";
+                        $parentIncomeSummary->transaction_date = $request->step_count_date;
+                        $parentIncomeSummary->transaction_type = "Referral";
                     }
                     $parentIncomeSummary->credit_amount = ( (int) ($request->step_count/$minSteps) ) * $firstLevelRewards;
                     $parentIncomeSummary->save();
 
                     if($firstReferralUser->parent_id){
-                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id, 'income_date' => $request->step_count_date])->first();
+                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                         if(is_null($secondParentIncomeSummary)){
                             $secondParentIncomeSummary = new UserIncomeSummary();
                             $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
-                            $secondParentIncomeSummary->income_date = $request->step_count_date;
-                            $secondParentIncomeSummary->income_type = "Referral";
+                            $secondParentIncomeSummary->transaction_date = $request->step_count_date;
+                            $secondParentIncomeSummary->transaction_type = "Referral";
                         }
                         $secondParentIncomeSummary->credit_amount = ( (int) ($request->step_count/$minSteps) ) * $secondLevelRewards;
                         $secondParentIncomeSummary->save();
