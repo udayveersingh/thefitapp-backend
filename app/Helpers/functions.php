@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Setting;
+use App\Models\User;
 
 if(!function_exists('get_image_absolute_path')){
     function get_images_absolute_path($object = []){
@@ -22,12 +23,18 @@ if(!function_exists('getSettings')){
     }
 }
 
-if(!function_exists('codeGenerate')){
-function codeGenerate() {
+if(!function_exists('GenerateReferralCode')){
+function GenerateReferralCode() {
     $randCode  = (string)mt_rand(1000,99999);
     $randChar  = rand(65,90);
     $randInx   = rand(0,3);
     $randCode[$randInx] = chr($randChar);
-    return $randCode;
+    
+    $user = User::where('referal_code', '=', $randCode)->first();
+    if(!is_null($user)){
+        return GenerateReferralCode();
+    }else{
+        return $randCode;
+    }
   }
 }

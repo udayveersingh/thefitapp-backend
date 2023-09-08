@@ -96,22 +96,15 @@ class RegisterController extends Controller
                 return response()->json(['success' => true, "message" => "Invalid Referal Code!"], 400);
             }
         }
-        $randInx = codeGenerate();
-        $user = User::where('referal_code', '=', $randInx)->first();
-        if (is_null($user)) {
-            $user = User::create([
-                'name' => $request->name,
-                'email' => $request->email,
-                'phone' => $request->phone,
-                'referal_code' => $randInx,
-                'parent_id' => $parentId,
-            ]);
-        } else {
-            return response()->json([
-                'success' => false,
-                'message' => "The Referal code has already been taken."
-            ], 400);
-        }
+        $referralCode = GenerateReferralCode();
+        
+        $user = User::create([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'referal_code' => $referralCode,
+            'parent_id' => $parentId,
+        ]);
         // $token = JWTAuth::fromUser($user);
         // $token = auth::attempt($newUser);
 

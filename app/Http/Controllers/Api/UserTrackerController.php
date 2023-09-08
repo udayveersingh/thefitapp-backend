@@ -8,6 +8,7 @@ use App\Models\UserRefferal;
 use Illuminate\Http\Request;
 use App\Models\UserTracker;
 use Illuminate\Support\Facades\Validator;
+use DB;
 
 class UserTrackerController extends Controller
 {
@@ -74,8 +75,8 @@ class UserTrackerController extends Controller
         // $firstLevelRewards = 0.25;
         // $secondLevelRewards = 0.10;
         
-       //get data of settings
-       $setting = getSettings();
+        //get data of settings
+        $setting = getSettings();
         $minSteps =  $setting['minimum_steps'];
         $stepRewards = $setting['step_rewards'];
         $firstLevelRewards = $setting['first_level_commission'];
@@ -84,7 +85,17 @@ class UserTrackerController extends Controller
             $user_tracker->reward_amount = ( (int) ($request->step_count/$minSteps) ) * $stepRewards;
         }
         if($user_tracker->save()){
-            if($request->step_count >= $minSteps){
+
+            if($user_tracker->reward_amount){
+                $userIncomeSummary = UserIncomeSummary::where(['user_id' => $user->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                if(is_null($userIncomeSummary)){
+                    $userIncomeSummary = new UserIncomeSummary();
+                    $userIncomeSummary->user_id = $user->id;
+                    $userIncomeSummary->transaction_date = $request->step_count_date;
+                    $userIncomeSummary->transaction_type = "StepTracker";
+                }
+                $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
+                $userIncomeSummary->save();
 
                 $firstParentReferral = UserRefferal::where(['user_id' => $user->id])->first();
                 if(!is_null($firstParentReferral)){
