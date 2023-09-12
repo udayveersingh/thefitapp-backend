@@ -41,5 +41,7 @@ Route::resource('/user-profile',App\Http\Controllers\Api\UserProfileController::
 Route::resource('/user-tracker',App\Http\Controllers\Api\UserTrackerController::class);
 Route::resource('/tasks',App\Http\Controllers\Api\UserTaskController::class);
 Route::resource('/rewards',App\Http\Controllers\Api\UserIncomeSummaryController::class);
+Route::post('/user-wallet-balance',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'withdrawBalance']);
+Route::get('/user-wallet-balance',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'walletBalance']);
 Route::get('/user-earnings',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userEarnings']);
 

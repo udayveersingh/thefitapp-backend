@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Schema::table('users', function (Blueprint $table) {
-        //     $table->string('parent_id')->nullable();
-        // });
+        Schema::table('user_income_summaries', function (Blueprint $table) {
+            $table->enum('withdrawl_status',['pending','approved','rejected'])->default('pending');
+        });
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            // $table->dropColumn('parent_id');
+        Schema::table('user_income_summaries', function (Blueprint $table) {
+            //
         });
     }
 };

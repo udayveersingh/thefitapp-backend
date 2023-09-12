@@ -67,7 +67,7 @@ class UserTrackerController extends Controller
             $user_tracker->move_min = $request->move_min;
             $user_tracker->miles = $request->miles;
             $user_tracker->step_count_date = $request->step_count_date;
-        }else{
+        } else {
             $user_tracker = UserTracker::find($user_tracker->id);
             $total_step_count =  (int) ($request->step_count) + (int)($user_tracker->step_count);
             $calories = (int) ($request->calories) + (int) ($user_tracker->calories);
@@ -95,50 +95,49 @@ class UserTrackerController extends Controller
             // $user_tracker->reward_amount = ((int) ($total_step_count / $minSteps)) * $stepRewards;
             $user_tracker->reward_amount = $stepRewards;
         }
-        $user_tracker->save();
+        // $user_tracker->save();
         // dd($user_tracker);
-        // if($user_tracker->save()){
-
-        if ($user_tracker->reward_amount) {
-            $userIncomeSummary = UserIncomeSummary::where(['user_id' => $user->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
-            if (is_null($userIncomeSummary)) {
-                $userIncomeSummary = new UserIncomeSummary();
-                $userIncomeSummary->user_id = $user->id;
-                $userIncomeSummary->transaction_date = $request->step_count_date;
-                $userIncomeSummary->transaction_type = "StepTracker";
-            }
-            $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
-            $userIncomeSummary->steps = $total_step_count;
-            $userIncomeSummary->save();
-
-            if ($user->parent_id) {
-                $firstReferralUser = User::where(['id' => $user->parent_id])->first();
-
-                $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
-                if (is_null($parentIncomeSummary)) {
-                    $parentIncomeSummary = new UserIncomeSummary();
-                    $parentIncomeSummary->user_id = $firstReferralUser->id;
-                    $parentIncomeSummary->transaction_date = $request->step_count_date;
-                    $parentIncomeSummary->transaction_type = "Referral";
+        if ($user_tracker->save()) {
+            if ($user_tracker->reward_amount) {
+                $userIncomeSummary = UserIncomeSummary::where(['user_id' => $user->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                if (is_null($userIncomeSummary)) {
+                    $userIncomeSummary = new UserIncomeSummary();
+                    $userIncomeSummary->user_id = $user->id;
+                    $userIncomeSummary->transaction_date = $request->step_count_date;
+                    $userIncomeSummary->transaction_type = "StepTracker";
                 }
-                $parentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $firstLevelRewards;
-                $parentIncomeSummary->save();
-                if ($firstReferralUser->parent_id) {
-                    $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
-                    if (is_null($secondParentIncomeSummary)) {
-                        $secondParentIncomeSummary = new UserIncomeSummary();
-                        $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
-                        $secondParentIncomeSummary->transaction_date = $request->step_count_date;
-                        $secondParentIncomeSummary->transaction_type = "Referral";
+                $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
+                $userIncomeSummary->steps = $total_step_count;
+                $userIncomeSummary->save();
+
+                if ($user->parent_id) {
+                    $firstReferralUser = User::where(['id' => $user->parent_id])->first();
+
+                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                    if (is_null($parentIncomeSummary)) {
+                        $parentIncomeSummary = new UserIncomeSummary();
+                        $parentIncomeSummary->user_id = $firstReferralUser->id;
+                        $parentIncomeSummary->transaction_date = $request->step_count_date;
+                        $parentIncomeSummary->transaction_type = "Referral";
                     }
-                    $secondParentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $secondLevelRewards;
-                    $secondParentIncomeSummary->save();
+                    $parentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $firstLevelRewards;
+                    $parentIncomeSummary->save();
+                    if ($firstReferralUser->parent_id) {
+                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                        if (is_null($secondParentIncomeSummary)) {
+                            $secondParentIncomeSummary = new UserIncomeSummary();
+                            $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
+                            $secondParentIncomeSummary->transaction_date = $request->step_count_date;
+                            $secondParentIncomeSummary->transaction_type = "Referral";
+                        }
+                        $secondParentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $secondLevelRewards;
+                        $secondParentIncomeSummary->save();
+                    }
                 }
             }
+            return response()->json(['success' => true, 'data' => $user_tracker], 200);
+            }else{
+            return response()->json(['success' => false, 'message' => "Invalid Token"], 401);
         }
-        return response()->json(['success' => true, 'data' => $user_tracker], 200);
-        // }else{
-        return response()->json(['success' => false, 'message' => "Invalid Token"], 401);
     }
-    // }
 }
