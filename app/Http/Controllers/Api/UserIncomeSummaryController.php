@@ -261,7 +261,6 @@ class UserIncomeSummaryController extends Controller
         } else {
             return response()->json(['success' => false, "message" => "Something went wrong. Please try again."], 400);
         }
-
         // dd($user);
     }
 

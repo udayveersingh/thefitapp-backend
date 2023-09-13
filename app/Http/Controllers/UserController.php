@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Profile;
 use App\Models\Task;
 use App\Models\User;
+use App\Models\UserIncomeSummary;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -26,6 +27,8 @@ class UserController extends Controller
      Public function userDetail($id)
      {
         $user = User::with('profile')->find($id);
+        $user_income_summary = UserIncomeSummary::where('user_id','=',$user->id)->get();
+        // dd($user_income_summary);
         // if(is_null($user->profile)){
         //     return redirect()->route('users')->with('message','Profile Detail Not added.');
         // }

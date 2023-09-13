@@ -229,7 +229,7 @@
                 </div>
                 <div class="panel">
                     <div class="mb-5">
-                        <h5 class="font-semibold text-lg dark:text-white-light">WithDrew Balance</h5>
+                        <h5 class="font-semibold text-lg dark:text-white-light">WithDraw Balance</h5>
                     </div>
                     <div class="space-y-4">
                         <div class="border border-[#ebedf2] rounded dark:bg-[#1b2e4b] dark:border-0">

@@ -65,4 +65,5 @@ class User extends Authenticatable implements JWTSubject
     {
         return $this->belongsTo(Profile::class,'id','user_id');
     }
+
 }

@@ -119,6 +119,8 @@ class UserTrackerController extends Controller
                         $parentIncomeSummary->user_id = $firstReferralUser->id;
                         $parentIncomeSummary->transaction_date = $request->step_count_date;
                         $parentIncomeSummary->transaction_type = "Referral";
+                        $parentIncomeSummary->referral_by_id = $user->id;
+
                     }
                     $parentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $firstLevelRewards;
                     $parentIncomeSummary->save();
@@ -129,6 +131,7 @@ class UserTrackerController extends Controller
                             $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
                             $secondParentIncomeSummary->transaction_date = $request->step_count_date;
                             $secondParentIncomeSummary->transaction_type = "Referral";
+                            $parentIncomeSummary->referral_by_id = $user->id;
                         }
                         $secondParentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $secondLevelRewards;
                         $secondParentIncomeSummary->save();
