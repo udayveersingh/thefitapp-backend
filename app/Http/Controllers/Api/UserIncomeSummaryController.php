@@ -206,7 +206,7 @@ class UserIncomeSummaryController extends Controller
             if ($otpcode = $this->generateOtp($user->email)) {
                 //TODO: Send Email to customer with OTP Code
                 if (env('APP_ENV') != "local") {
-                    Mail::to($request->email)->send(new SendOTPEmailNotification($user, $otpcode));
+                    Mail::to($user->email)->send(new SendOTPEmailNotification($user, $otpcode));
                 }
                 return response()->json(['success' => true, "message" => "OTP sent successfully", "data" => $user], 200);
             } else {
