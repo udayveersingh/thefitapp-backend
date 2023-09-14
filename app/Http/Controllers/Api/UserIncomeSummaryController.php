@@ -68,7 +68,6 @@ class UserIncomeSummaryController extends Controller
             'page' => $page, // // $request->page
             'data' => $rewards // // $request->page
         ];
-
         return response()->json($response, 200);
     }
 

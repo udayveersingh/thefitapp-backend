@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserIncomeSummary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class UserReferralController extends Controller
 {
@@ -24,47 +25,51 @@ class UserReferralController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
         $user = auth()->user();
         if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
-        } else {
-              $referral_users = User::where('parent_id','=',$user->id)->get();
-            //   dd($referral_users); 
-
-            return response()->json(['success' => true, 'data' => ''], 200);
         }
-    }
+        // dd($request->all());
+        $limit = $request->limit ? $request->limit : 10;
+        $page = $request->page ? $request->page : 1;
+        $offset = (($page - 1) * $limit);
+        $orderBy = $request->orderby ? $request->orderby : 'transaction_date';
+        $order = $request->order ? $request->order : 'DESC';
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+        $referralFriendsQuery = DB::table('users')
+            ->select('users.id', 'users.name', 'user_income_summaries.transaction_date', 'user_income_summaries.credit_amount')
+            ->join('user_income_summaries', 'user_income_summaries.user_id', '=', 'users.id')
+            ->where('parent_id', '=', $user->id);
+        // ->get();
+
+        if ($request->transaction_date) {
+            $referralFriendsQuery->whereDate('transaction_date', '=', $request->transaction_date);
+        }
+
+        $totalRows = $referralFriendsQuery->count();
+        $referralFriendsQuery->orderBy($orderBy, $order);
+
+        if ($limit > 0) {
+            $referralFriendsQuery->skip($offset)->limit($limit);
+        }
+        $referral_users = $referralFriendsQuery->get();
+
+        $response = [
+            'success' => true,
+            'total' => $totalRows,
+            'limit' => $limit, // $request->limit
+            'page' => $page, // // $request->page
+            'data' => $referral_users,
+        ];
+        return response()->json($response, 200);
     }
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
     {
         //
     }
