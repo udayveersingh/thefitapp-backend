@@ -30,13 +30,10 @@ class UserReferralController extends Controller
         if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         } else {
-             $get_refrral_user = UserIncomeSummary::where('user_id','=',$user->id)->first();
-             if(!empty($get_refrral_user))
-             {
-                $user_referral_friend = User::where('id','=',$get_refrral_user->referral_by_id)->get();
-             }
+              $referral_users = User::where('parent_id','=',$user->id)->get();
+            //   dd($referral_users); 
 
-            return response()->json(['success' => true, 'data' =>  $user_referral_friend], 200);
+            return response()->json(['success' => true, 'data' => ''], 200);
         }
     }
 
