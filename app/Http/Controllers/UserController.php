@@ -28,12 +28,15 @@ class UserController extends Controller
      {
         $user = User::with('profile')->find($id);
         $user_income_summary = UserIncomeSummary::where('user_id','=',$user->id)->get();
+        $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
+        $referral_balance = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type','=','Referral')->sum('credit_amount');
+        $withdraw_balance = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type','=','WithDrawl')->where('withdrawl_status','=','approved')->sum('debit_amount');
         // dd($user_income_summary);
         // if(is_null($user->profile)){
         //     return redirect()->route('users')->with('message','Profile Detail Not added.');
         // }
         $tasks = Task::get();
-        return view('users.user-detail',compact('user','tasks'));
+        return view('users.user-detail',compact('user','tasks','totalBalance','referral_balance','withdraw_balance'));
      }
 
     /**
