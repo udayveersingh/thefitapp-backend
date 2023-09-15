@@ -31,6 +31,7 @@ class UserReferralController extends Controller
         if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
+        $total_referral_earns = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','Referral')->sum('credit_amount');
         // dd($request->all());
         $limit = $request->limit ? $request->limit : 10;
         $page = $request->page ? $request->page : 1;
@@ -38,12 +39,11 @@ class UserReferralController extends Controller
         $orderBy = $request->orderby ? $request->orderby : 'transaction_date';
         $order = $request->order ? $request->order : 'DESC';
 
-        $referralFriendsQuery = DB::table('users')
-            ->select('users.id', 'users.name', 'user_income_summaries.transaction_date', 'user_income_summaries.credit_amount')
-            ->join('user_income_summaries', 'user_income_summaries.user_id', '=', 'users.id')
-            ->where('parent_id', '=', $user->id);
-        // ->get();
-
+        $referralFriendsQuery = DB::table('user_income_summaries')
+        ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'),'user_income_summaries.credit_amount','users.name')
+        ->join('users', 'users.id','=','user_income_summaries.referred_user_id')->where('user_income_summaries.user_id','=',$user->id);
+        // ->where('user_income_summaries.transaction_type','=','Referral');
+    // ->get();
         if ($request->transaction_date) {
             $referralFriendsQuery->whereDate('transaction_date', '=', $request->transaction_date);
         }
@@ -56,8 +56,11 @@ class UserReferralController extends Controller
         }
         $referral_users = $referralFriendsQuery->get();
 
+
         $response = [
             'success' => true,
+            'total_referral_earns' => $total_referral_earns,
+            'referral_code' => $user->referral_code,
             'total' => $totalRows,
             'limit' => $limit, // $request->limit
             'page' => $page, // // $request->page

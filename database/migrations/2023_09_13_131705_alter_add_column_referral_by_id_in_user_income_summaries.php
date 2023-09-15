@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('user_income_summaries', function (Blueprint $table) {
-            $table->integer('referral_by_id')->nullable();
+            $table->integer('referred_user_id')->nullable();
         });
     }
 
