@@ -62,21 +62,21 @@ class UserTrackerController extends Controller
         if (is_null($user_tracker)) {
             $user_tracker = new UserTracker();
             $user_tracker->user_id = $user->id;
-            $total_step_count = $user_tracker->step_count = $request->step_count;
+            $user_tracker->step_count = $request->step_count;
             $user_tracker->calories = $request->calories;
             $user_tracker->move_min = $request->move_min;
             $user_tracker->miles = $request->miles;
             $user_tracker->step_count_date = $request->step_count_date;
         } else {
             $user_tracker = UserTracker::find($user_tracker->id);
-            $total_step_count =  (int) ($request->step_count) + (int)($user_tracker->step_count);
-            $calories = (int) ($request->calories) + (int) ($user_tracker->calories);
-            $move_min = (int) ($request->move_min) + (int) ($user_tracker->move_min);
-            $miles = (int) ($request->miles) + (int) ($user_tracker->miles);
-            $user_tracker->step_count =  $total_step_count;
-            $user_tracker->calories = $calories;
-            $user_tracker->move_min =  $move_min;
-            $user_tracker->miles =  $miles;
+            // $total_step_count =  (int) ($request->step_count) + (int)($user_tracker->step_count);
+            // $calories = (int) ($request->calories) + (int) ($user_tracker->calories);
+            // $move_min = (int) ($request->move_min) + (int) ($user_tracker->move_min);
+            // $miles = (int) ($request->miles) + (int) ($user_tracker->miles);
+            $user_tracker->step_count = $request->step_count;
+            $user_tracker->calories = $request->calories;
+            $user_tracker->move_min =$request->move_min;
+            $user_tracker->miles =  $request->miles;
             $user_tracker->step_count_date = $request->step_count_date;
         }
 
@@ -91,7 +91,7 @@ class UserTrackerController extends Controller
         $stepRewards = $setting['step_rewards'];
         $firstLevelRewards = $setting['first_level_commission'];
         $secondLevelRewards = $setting['second_level_commission'];
-        if ($total_step_count >= $minSteps) {
+        if ($request->step_count >= $minSteps) {
             // $user_tracker->reward_amount = ((int) ($total_step_count / $minSteps)) * $stepRewards;
             $user_tracker->reward_amount = $stepRewards;
         }
@@ -108,7 +108,7 @@ class UserTrackerController extends Controller
                     $userIncomeSummary->withdrawl_status = "approved";
                 }
                 $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
-                $userIncomeSummary->steps = $total_step_count;
+                $userIncomeSummary->steps =$request->step_count;
                 $userIncomeSummary->save();
 
                 if ($user->parent_id) {
@@ -123,7 +123,7 @@ class UserTrackerController extends Controller
                         $parentIncomeSummary->referred_user_id = $user->id;
                         $userIncomeSummary->withdrawl_status = "approved";
                     }
-                    $parentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $firstLevelRewards;
+                    $parentIncomeSummary->credit_amount = ((int) ($request->step_count / $minSteps)) * $firstLevelRewards;
                     $parentIncomeSummary->save();
                     if ($firstReferralUser->parent_id) {
                         $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
@@ -135,7 +135,7 @@ class UserTrackerController extends Controller
                             $parentIncomeSummary->referred_user_id = $user->id;
                             $userIncomeSummary->withdrawl_status = "approved";
                         }
-                        $secondParentIncomeSummary->credit_amount = ((int) ($total_step_count / $minSteps)) * $secondLevelRewards;
+                        $secondParentIncomeSummary->credit_amount = ((int) ($request->step_count / $minSteps)) * $secondLevelRewards;
                         $secondParentIncomeSummary->save();
                     }
                 }
