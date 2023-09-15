@@ -223,4 +223,38 @@ class UserIncomeSummaryController extends Controller
             return response()->json(['success' => true, "message" => "Your Payment has been successfully."], 400);
         }
     }
+
+    public function withDrawlList(Request $request)
+    {
+        $user = auth()->user();
+        if (is_null($user)) {
+            return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
+        }
+
+        $limit = $request->limit ? $request->limit : 10;
+        $page = $request->page ? $request->page : 1;
+        $offset = (($page - 1) * $limit);
+        $orderBy = $request->orderby ? $request->orderby : 'transaction_date';
+        $order = $request->order ? $request->order : 'DESC';
+        $withdrawlQuery = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type', '=', 'WithDrawl')->where('withdrawl_status', '=', 'approved');
+        if ($request->transaction_date) {
+            $withdrawlQuery->whereDate('transaction_date', '=', $request->transaction_date);
+        }
+        $totalRows = $withdrawlQuery->count();
+        $withdrawlQuery->orderBy($orderBy, $order);
+        if ($limit > 0) {
+            $withdrawlQuery->skip($offset)->limit($limit);
+        }
+
+        $user_withdrawl_list = $withdrawlQuery->get();
+
+        $response = [
+            'success' => true,
+            'total' => $totalRows,
+            'limit' => $limit, // $request->limit
+            'page' => $page, // // $request->page
+            'data' => $user_withdrawl_list // // $request->page
+        ];
+        return response()->json($response, 200);
+    }
 }

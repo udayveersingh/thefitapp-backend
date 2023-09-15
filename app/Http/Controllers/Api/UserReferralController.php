@@ -54,13 +54,12 @@ class UserReferralController extends Controller
         if ($limit > 0) {
             $referralFriendsQuery->skip($offset)->limit($limit);
         }
-        $referral_users = $referralFriendsQuery->get();
-
-
+        // $referral_users = $referralFriendsQuery->get();
+        $referral_users = ['total_referral_earns' => $total_referral_earns,'referral_code' => $user->referral_code,'referral_earnings' => $referralFriendsQuery->get()];
         $response = [
             'success' => true,
-            'total_referral_earns' => $total_referral_earns,
-            'referral_code' => $user->referral_code,
+            // 'total_referral_earns' => $total_referral_earns,
+            // 'referral_code' => $user->referral_code,
             'total' => $totalRows,
             'limit' => $limit, // $request->limit
             'page' => $page, // // $request->page

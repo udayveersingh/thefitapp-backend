@@ -30,8 +30,10 @@ class UserTaskController extends Controller
         if(is_null($user)){
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }else{
-            
-            $tasks = Task::get();
+            $now =  date('Y-m-d');
+            $tasks = Task::where('task_start_date','<=',$now)
+            ->where('task_end_date','>=', $now)
+            ->get();
             $response = [
                 'success' => true,
                 'total' => count($tasks),

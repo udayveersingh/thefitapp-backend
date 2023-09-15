@@ -42,7 +42,8 @@ Route::resource('/user-tracker',App\Http\Controllers\Api\UserTrackerController::
 Route::resource('/tasks',App\Http\Controllers\Api\UserTaskController::class);
 Route::resource('/rewards',App\Http\Controllers\Api\UserIncomeSummaryController::class);
 Route::resource('/referral-friend-list',App\Http\Controllers\Api\UserReferralController::class);
-Route::post('/user-wallet-balance',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'withdrawBalance']);
+Route::post('/user-withdrawl-balance',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'withdrawBalance']);
+Route::get('/user-withdrawl-list',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'withDrawlList']);
 Route::get('/user-wallet-balance',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'walletBalance']);
 Route::get('/user-earnings',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userEarnings']);
 
