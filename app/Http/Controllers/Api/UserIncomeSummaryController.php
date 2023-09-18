@@ -257,4 +257,22 @@ class UserIncomeSummaryController extends Controller
         ];
         return response()->json($response, 200);
     }
+
+
+    public function userDailyGoals()
+    {
+        $user = auth()->user();
+        if (is_null($user)) {
+            return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
+        }
+        $current_date = \Carbon\Carbon::today()->subDays(7);
+        $user_daily_goals = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','StepTracker')->where('transaction_date','>=',$current_date)->get();
+        $response = [
+            "success" => true,
+            "data" => [
+                "user_daily_goals" => $user_daily_goals,
+            ],
+        ];
+        return response()->json($response, 200);
+    }
 }
