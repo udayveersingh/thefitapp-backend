@@ -7,6 +7,7 @@ use App\Models\Task;
 use App\Models\User;
 use App\Models\UserIncomeSummary;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
@@ -32,14 +33,21 @@ class UserController extends Controller
         $withdraw_balance = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type','=','WithDrawl')->where('withdrawl_status','=','approved')->sum('debit_amount');
         $total_earning_balance = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type','=','StepTracker')->sum('credit_amount');
         $user_earning_balance = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type','=','StepTracker')->get();
+        $user_referral_balance = DB::table('user_income_summaries')
+        ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'),'user_income_summaries.credit_amount','user_income_summaries.transaction_type','users.name')  
+        ->join('users', 'users.id','=','user_income_summaries.referred_user_id')->where('user_income_summaries.user_id','=',$user->id)->get();
+
+
         // dd($user_earning_balance);
         $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
+
         // dd($user_income_summary);
         // if(is_null($user->profile)){
         //     return redirect()->route('users')->with('message','Profile Detail Not added.');
         // }
         $tasks = Task::get();
-        return view('users.user-detail',compact('user','tasks','totalBalance','referral_balance','withdraw_balance','total_earning_balance','user_earning_balance'));
+        return view('users.user-detail',compact('user','tasks','totalBalance','referral_balance','withdraw_balance','total_earning_balance','user_earning_balance','user_referral_balance'));
+
      }
 
     /**
@@ -99,5 +107,16 @@ class UserController extends Controller
     public function destroy(string $id)
     {
         //
+    }
+
+
+    public function stepTrackerEarnings()
+    {
+
+        $user_step_trackers = DB::table('user_income_summaries')
+        ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'),'user_income_summaries.credit_amount','user_income_summaries.transaction_type','user_income_summaries.steps','users.name')  
+        ->join('users', 'users.id','=','user_income_summaries.user_id')->where('transaction_type','=','StepTracker')->get();
+        return view('reports.step_trackers_earning',compact('user_step_trackers'));
+
     }
 }

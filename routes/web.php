@@ -16,7 +16,8 @@ Route::post('/user-login', [LoginController::class, 'UserLogin'])->name('user-lo
 Route::get('/users',[UserController::class,'index'])->name('users');
 Route::get('/users/{id}/edit',[UserController::class,'edit'])->name('users.edit');
 Route::get('/user/{id}/detail/',[UserController::class,'userDetail'])->name('user.detail');
-Route::get('/user/trackers',[UserController::class,'trackers'])->name('user.trackers');
+Route::get('/step-trackers-earnings',[UserController::class,'stepTrackerEarnings'])->name('step-trackers-earnings');
+// Route::get('/user/trackers',[UserController::class,'trackers'])->name('user.trackers');
 Route::post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
 
 //Task 
