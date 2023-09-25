@@ -209,6 +209,7 @@ class UserIncomeSummaryController extends Controller
         $withdraw_balance->debit_amount = $request->amount;
         $withdraw_balance->transaction_type = "WithDrawl";
         $withdraw_balance->withdrawl_status = "pending";
+        $withdraw_balance->transaction_date =  $request->transaction_date;
         if ($withdraw_balance->save()) {
             // dd($withdraw_balance->user_id);
             $user_profile = Profile::where('user_id', '=', $withdraw_balance->user_id)->first();

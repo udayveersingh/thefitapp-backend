@@ -216,13 +216,13 @@
                     </button>
                     <ul x-cloak x-show="activeDropdown === 'reports'" x-collapse class="sub-menu text-gray-500">
                         <li>
-                            <a href="">Step Tracker Earnings</a>
+                            <a href="{{route('step-trackers-earnings')}}">Step Tracker Earnings</a>
                         </li>
                         <li>
-                            <a href="">Referral Earnings</a>
+                            <a href="{{'referral-earnings'}}">Referral Earnings</a>
                         </li>
                         <li>
-                            <a href="">Withdrawl List</a>
+                            <a href="{{'withdrawl-list'}}">Withdrawl List</a>
                         </li>
                     </ul>
                 </li>

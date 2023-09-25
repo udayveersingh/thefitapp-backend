@@ -12,34 +12,24 @@
             </button>
         </div>
     @endif
-    <div x-data="taskList">
+    <div x-data="stepTrackersList">
         <script src="{{ asset('/assets/js/simple-datatables.js') }}"></script>
         <div class="panel px-0 border-[#e0e6ed] dark:border-[#1b2e4b]">
             <div class="px-5">
-                <div class="md:absolute md:top-5 ltr:md:left-5 rtl:md:right-5">
-                    <div class="flex items-center gap-2 mb-5">
-                        <a href="{{ route('tasks.create') }}" class="btn btn-primary gap-2">
-                            <svg xmlns="" width="24px" height="24px" viewBox="0 0 24 24" fill="none"
-                                stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"
-                                class="w-5 h-5">
-                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                            </svg>
-                            Add New </a>
-                    </div>
-                </div>
+                <h5 class="md:absolute md:top-[25px] md:mb-0 mb-5 font-semibold text-lg dark:text-white-light">Step Trackers Earning List
+                </h5>
             </div>
-            <div class="task-table">
-                <table id="taskTable" class="whitespace-nowrap"></table>
+            <div class="step-trackers-Table">
+                <table id="stepTrackersTable" class="whitespace-nowrap"></table>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener("alpine:init", () => {
-            Alpine.data("taskList", () => ({
+            Alpine.data("stepTrackersList", () => ({
                 datatable1: null,
                 init() {
-                    this.datatable1 = new simpleDatatables.DataTable('#taskTable', {
+                    this.datatable1 = new simpleDatatables.DataTable('#stepTrackersTable', {
                         data: {
                             headings: ['Name', 'Transaction Type', 'Transaction Date', 'Steps',
                                 'Earning'
@@ -48,7 +38,7 @@
                                 @foreach ($user_step_trackers as $step_tracker)
                                     ['{{ $step_tracker->name }}',
                                         '{{ $step_tracker->transaction_type }}',
-                                        '{{ date('d M Y', strtotime($step_tracker->date)) }}',
+                                        '{{ $step_tracker->date }}',
                                         '{{ $step_tracker->steps }}',
                                         '{{ $step_tracker->credit_amount }}'
                                     ],
@@ -79,30 +69,6 @@
                         },
                     });
                 },
-
-                // formatDate(date) {
-                //     if (date) {
-                //         const dt = new Date(date);
-                //         const month = dt.getMonth() + 1 < 10 ? '0' + (dt.getMonth() + 1) : dt
-                //         .getMonth() + 1;
-                //         const day = dt.getDate() < 10 ? '0' + dt.getDate() : dt.getDate();
-                //         return day + '/' + month + '/' + dt.getFullYear();
-                //     }
-                //     return '';
-                // },
-
-                // randomColor() {
-                //     const color = ['primary', 'secondary', 'success', 'danger', 'warning', 'info'];
-                //     const random = Math.floor(Math.random() * color.length);
-                //     return color[random];
-                // },
-
-                // randomStatus() {
-                //     const status = ['PAID', 'APPROVED', 'FAILED', 'CANCEL', 'SUCCESS', 'PENDING','COMPLETE'
-                //     ];
-                //     const random = Math.floor(Math.random() * status.length);
-                //     return status[random];
-                // }
             }));
         });
     </script>

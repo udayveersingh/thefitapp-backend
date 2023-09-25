@@ -17,6 +17,9 @@ Route::get('/users',[UserController::class,'index'])->name('users');
 Route::get('/users/{id}/edit',[UserController::class,'edit'])->name('users.edit');
 Route::get('/user/{id}/detail/',[UserController::class,'userDetail'])->name('user.detail');
 Route::get('/step-trackers-earnings',[UserController::class,'stepTrackerEarnings'])->name('step-trackers-earnings');
+Route::get('/referral-earnings',[UserController::class,'referralEarnings'])->name('referral-earnings');
+Route::get('/withdrawl-list',[UserController::class,'withdrawlList'])->name('withdrawl-list');
+
 // Route::get('/user/trackers',[UserController::class,'trackers'])->name('user.trackers');
 Route::post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
 
