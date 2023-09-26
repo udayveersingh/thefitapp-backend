@@ -56,14 +56,14 @@ class UserController extends Controller
         $user = user::find(auth()->user()->id);
         if($user){
             
-            if($request->input('pass_code')){
-                $user->pass_code = $request->input('pass_code');
+            if($request->pass_code){
+                $user->pass_code = $request->pass_code;
             }
-            if($request->input('name')){
-                $user->name = $request->input('name');
+            if($request->name){
+                $user->name = $request->name;
             }
-            if($request->input('phone')){
-                $user->phone = $request->input('phone');
+            if($request->phone){
+                $user->phone = $request->phone;
             }
 
             $user->save();
