@@ -29,11 +29,11 @@ class UserController extends Controller
     public function index()
     {
         $user = auth()->user();
-        if(is_null($user)){
+        if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
-        }else{
+        } else {
             $user = User::with('profile')->find($user->id)->toArray();
-            if(isset($user['profile'])){
+            if (isset($user['profile'])) {
                 $user['profile'] = get_images_absolute_path($user['profile']);
             }
             return response()->json(['success' => true, 'data' => $user], 200);
@@ -54,36 +54,40 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $user = user::find(auth()->user()->id);
-        if($user){
-            
-            if($request->input('pass_code')){
+        if ($user) {
+
+            if ($request->input('pass_code')) {
                 $user->pass_code = $request->input('pass_code');
             }
-            if($request->input('name')){
+            if ($request->input('name')) {
                 $user->name = $request->input('name');
             }
-            if($request->input('phone')){
+            if ($request->input('phone')) {
                 $user->phone = $request->input('phone');
             }
 
             $user->save();
-           
+
             if ($request->hasFile('profile_pic')) {
-                $user_profile = Profile::where('user_id','=', $user->id)->first();
-                if(is_null($user_profile)){
+                $user_profile = Profile::where('user_id', '=', $user->id)->first();
+                if (is_null($user_profile)) {
                     $user_profile = new Profile();
                     $user_profile->user_id = $user->id;
                 }
 
-                $profile_pic = $user->id."-".time() . '.' . $request->profile_pic->extension();
-                $request->profile_pic->move(public_path('storage/images/') , $profile_pic);
+                $profile_pic = $user->id . "-" . time() . '.' . $request->profile_pic->extension();
+                $request->profile_pic->move(public_path('storage/images/'), $profile_pic);
 
                 $user_profile->profile_pic =  $profile_pic;
                 $user_profile->save();
             }
 
+            $user = User::with('profile')->find($user->id)->toArray();
+            if (isset($user['profile'])) {
+                $user['profile'] = get_images_absolute_path($user['profile']);
+            }
             return response()->json(['success' => true, 'user' => $user], 200);
-        }else{
+        } else {
             return response()->json(['success' => false, 'message' => "Unauthorized Error!"], 401);
         }
     }
@@ -119,5 +123,4 @@ class UserController extends Controller
     {
         //
     }
-
 }
