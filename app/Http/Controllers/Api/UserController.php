@@ -55,7 +55,6 @@ class UserController extends Controller
     {
         $user = user::find(auth()->user()->id);
         if ($user) {
-
             if ($request->input('pass_code')) {
                 $user->pass_code = $request->input('pass_code');
             }
