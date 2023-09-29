@@ -186,7 +186,7 @@ class UserIncomeSummaryController extends Controller
         $validator = Validator::make($request->all(), [
             'amount' => 'required',
             'withdrawl_address' => 'required',
-            'transaction_date' => 'required',
+            // 'transaction_date' => 'required',
             // 'email_otp' => 'required',
         ]);
         if ($validator->fails()) {
@@ -204,12 +204,13 @@ class UserIncomeSummaryController extends Controller
             return response()->json(['success' => false, "message" => " Your wallet balance is less than the requested amount."], 400);
         }
 
+        $current_date = date('Y-m-d');
         $withdraw_balance = new UserIncomeSummary();
         $withdraw_balance->user_id = $user->id;
         $withdraw_balance->debit_amount = $request->amount;
         $withdraw_balance->transaction_type = "WithDrawl";
         $withdraw_balance->withdrawl_status = "pending";
-        $withdraw_balance->transaction_date =  $request->transaction_date;
+        $withdraw_balance->transaction_date = $current_date;
         if ($withdraw_balance->save()) {
             // dd($withdraw_balance->user_id);
             $user_profile = Profile::where('user_id', '=', $withdraw_balance->user_id)->first();
