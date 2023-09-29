@@ -199,6 +199,12 @@ class UserIncomeSummaryController extends Controller
         if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
+
+        $check_withdrawl_request = UserIncomeSummary::where('user_id', '=', $user->id)->where('withdrawl_status', '=', 'pending')->first();
+        if (!empty($check_withdrawl_request) && $check_withdrawl_request->withdrawl_status == 'pending') {
+            return response()->json(['success' => false, "message" => "Your previous withdrawal request is under process. You can place next withdrawal after processing previous request from our side."], 400);
+        }
+
         $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
         if ($totalBalance < $request->amount) {
             return response()->json(['success' => false, "message" => " Your wallet balance is less than the requested amount."], 400);
@@ -268,7 +274,7 @@ class UserIncomeSummaryController extends Controller
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
         $current_date = \Carbon\Carbon::today()->subDays(7);
-        $user_daily_goals = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','StepTracker')->where('transaction_date','>=',$current_date)->get();
+        $user_daily_goals = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type', '=', 'StepTracker')->where('transaction_date', '>=', $current_date)->get();
         $response = [
             "success" => true,
             "data" => [

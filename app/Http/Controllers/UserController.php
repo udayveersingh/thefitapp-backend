@@ -97,8 +97,8 @@ class UserController extends Controller
     public function withdrawlList()
     {
         $users_withdrawl = DB::table('user_income_summaries')
-        ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.debit_amount', 'user_income_summaries.transaction_type','users.name')
-        ->join('users', 'users.id', '=', 'user_income_summaries.user_id')->where('transaction_type', '=','WithDrawl')->where('withdrawl_status','=','approved')->orderBy(DB::raw("DATE_FORMAT(user_income_summaries.transaction_date,'%d-%m-%Y')"), 'DESC')->get();
+        ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.debit_amount', 'user_income_summaries.transaction_type','users.name','user_income_summaries.withdrawl_status')
+        ->join('users', 'users.id', '=', 'user_income_summaries.user_id')->where('transaction_type', '=','WithDrawl')->orderBy(DB::raw("DATE_FORMAT(user_income_summaries.transaction_date,'%d-%m-%Y')"), 'DESC')->get();
 
     return view('reports.withdrawl_list', compact('users_withdrawl'));
 

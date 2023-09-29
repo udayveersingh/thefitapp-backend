@@ -32,14 +32,15 @@
                     this.datatable1 = new simpleDatatables.DataTable('#usersWithdrawlTable', {
                         data: {
                             headings: ['Name','Transaction Type', 'Transaction Date',
-                                'Earning'
+                                'Earning','Withdrawl Status'
                             ],
                             data: [
                                 @foreach ($users_withdrawl as $withdrawl)
-                                    ['{{ $withdrawl->name }}',
+                                    ['{{ ucfirst($withdrawl->name) }}',
                                         '{{ $withdrawl->transaction_type }}',
                                         '{{ $withdrawl->date }}',
-                                        '{{ $withdrawl->debit_amount }}'
+                                        '{{ $withdrawl->debit_amount }}',
+                                        '{{ucfirst($withdrawl->withdrawl_status)}}'
                                     ],
                                 @endforeach
                             ]
