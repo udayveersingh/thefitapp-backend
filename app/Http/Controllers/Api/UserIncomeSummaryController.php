@@ -207,7 +207,7 @@ class UserIncomeSummaryController extends Controller
 
         $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
         if ($totalBalance < $request->amount) {
-            return response()->json(['success' => false, "message" => " Your wallet balance is less than the requested amount."], 400);
+            return response()->json(['success' => false, "message" => "Your wallet balance is less than the requested amount."], 400);
         }
 
         $current_date = date('Y-m-d');
@@ -228,7 +228,7 @@ class UserIncomeSummaryController extends Controller
             $user_profile->user_id = $user->id;
             $user_profile->wallet_address = $request->withdrawl_address;
             $user_profile->save();
-            return response()->json(['success' => true, "message" => "We recieved your withdrawal request! We will process soon after reviewing your account."], 400);
+            return response()->json(['success' => true, "message" => "We recieved your withdrawal request! We will process soon after reviewing your account."], 200);
         }
     }
 
