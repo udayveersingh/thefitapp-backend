@@ -222,7 +222,7 @@ class UserIncomeSummaryController extends Controller
             $user_profile->user_id = $user->id;
             $user_profile->wallet_address = $request->withdrawl_address;
             $user_profile->save();
-            return response()->json(['success' => true, "message" => "Your Payment has been successfully."], 400);
+            return response()->json(['success' => true, "message" => "We recieved your withdrawal request! We will process soon after reviewing your account."], 400);
         }
     }
 
