@@ -42,7 +42,8 @@ class UserIncomeSummaryController extends Controller
         $orderBy = $request->orderby ? $request->orderby : 'transaction_date';
         $order = $request->order ? $request->order : 'DESC';
 
-        $rewardsQuery = UserIncomeSummary::where(['user_id', '=', $user->id],['transaction_type','=','StepTracker']);
+        $rewardsQuery = UserIncomeSummary::where('user_id', '=', $user->id)
+                                           ->where('transaction_type','=','StepTracker');
 
         if ($request->transaction_date) {
             $rewardsQuery->whereDate('transaction_date', '=', $request->transaction_date);
