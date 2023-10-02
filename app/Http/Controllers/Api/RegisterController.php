@@ -49,10 +49,7 @@ class RegisterController extends Controller
         $user = User::where([
             'email' => $request->input('user'),
             'pass_code' => $request->input('pass_code'),
-        ])->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')->first();
-        
-        if(isset($user['profile_pic']) && !empty($user['profile_pic']))
-        $user['profile_pic'] =   env('APP_URL').'/storage/images/'.$user['profile_pic'];
+        ])->first();
         
         if (is_null($user)) {
             $user = User::where([
