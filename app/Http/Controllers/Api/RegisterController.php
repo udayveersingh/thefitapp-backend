@@ -48,7 +48,7 @@ class RegisterController extends Controller
         $user = User::where([
             'email' => $request->input('user'),
             'pass_code' => $request->input('pass_code'),
-        ])->first();
+        ])->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')->first();
         if (is_null($user)) {
             $user = User::where([
                 'phone' => $request->input('user'),
