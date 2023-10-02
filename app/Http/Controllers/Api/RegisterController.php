@@ -45,13 +45,13 @@ class RegisterController extends Controller
                 'message' =>  $error
             ], 400);
         }
-        
+
         $user = User::where([
             'email' => $request->input('user'),
             'pass_code' => $request->input('pass_code'),
         ])->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')->first();
 
-        $user['profile_pic'] = get_images_absolute_path( $user['profile_pic']);
+        $user['profile_pic'] =   env('APP_URL').'/storage/images/'.$user['profile_pic'];
         
         if (is_null($user)) {
             $user = User::where([
