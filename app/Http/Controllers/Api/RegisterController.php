@@ -51,7 +51,7 @@ class RegisterController extends Controller
             'pass_code' => $request->input('pass_code'),
         ])->leftJoin('profiles', 'users.id', '=', 'profiles.user_id')->first();
         
-        if(!empty($user['profile_pic']))
+        if(isset($user['profile_pic']) && !empty($user['profile_pic']))
         $user['profile_pic'] =   env('APP_URL').'/storage/images/'.$user['profile_pic'];
         
         if (is_null($user)) {
