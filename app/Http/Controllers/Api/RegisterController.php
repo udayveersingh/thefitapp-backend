@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
+use App\Models\Profile;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -50,7 +51,7 @@ class RegisterController extends Controller
             'email' => $request->input('user'),
             'pass_code' => $request->input('pass_code'),
         ])->first();
-        
+
         if (is_null($user)) {
             $user = User::where([
                 'phone' => $request->input('user'),
@@ -62,6 +63,17 @@ class RegisterController extends Controller
             return response()->json(["success" => false, "message" => 'No user found.'], 404);
         }
         $token = JWTAuth::fromUser($user);
+
+        $profile = Profile::where([
+            'user_id' => $request->input($user->id)
+        ])->first();
+        
+        if(!empty($profile))
+        $profile_pic = env('APP_URL').'/storage/images/'.$profile['profile_pic'];
+        else
+        $profile_pic = '';
+
+        $user['profile_pic'] =  $profile_pic;
 
         return response()->json([
             'success' => true,
