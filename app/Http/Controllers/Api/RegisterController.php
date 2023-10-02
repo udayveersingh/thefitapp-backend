@@ -64,9 +64,7 @@ class RegisterController extends Controller
         }
         $token = JWTAuth::fromUser($user);
 
-        $profile = Profile::where([
-            'user_id' => $request->input($user->id)
-        ])->get();
+        $profile = Profile::where('user_id','=',$user->id)->first();
         
         if(!empty($profile))
         $profile_pic = env('APP_URL').'/storage/images/'.$profile['profile_pic'];
@@ -78,7 +76,6 @@ class RegisterController extends Controller
         return response()->json([
             'success' => true,
             'data' => $user,
-            'profile' => $profile,
             'access_token' => $token
         ], 201);
     }
