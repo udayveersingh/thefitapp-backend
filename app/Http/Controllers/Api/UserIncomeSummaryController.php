@@ -42,7 +42,7 @@ class UserIncomeSummaryController extends Controller
         $orderBy = $request->orderby ? $request->orderby : 'transaction_date';
         $order = $request->order ? $request->order : 'DESC';
 
-        $rewardsQuery = UserIncomeSummary::join('users', 'users.id', '=', 'user_income_summaries.user_id')
+        $rewardsQuery = UserIncomeSummary::leftjoin('users', 'users.id', '=', 'user_income_summaries.referred_user_id')
                                            ->where('user_id', '=', $user->id)
                                            ->select('user_income_summaries.*', 'users.name');
 
