@@ -119,7 +119,9 @@ class UserTrackerController extends Controller
                     $parentIncomeSummary = UserIncomeSummary::where('user_id','=',$firstReferralUser->id)
                                                               ->where('transaction_type','=','Referral')  
                                                               ->where('referred_user_id','!=',$user->id)
-                                                              ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                                                              ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)
+                                                              ->first();
+                    dd($parentIncomeSummary);
                     
                     if (is_null($parentIncomeSummary)) {
                         $parentIncomeSummary = new UserIncomeSummary();
