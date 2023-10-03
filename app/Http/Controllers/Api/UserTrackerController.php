@@ -99,13 +99,13 @@ class UserTrackerController extends Controller
         // dd($user_tracker);
         if ($user_tracker->save()) {
             if ($user_tracker->reward_amount) {
-                $userIncomeSummary = UserIncomeSummary::where(['user_id' => $user->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                $userIncomeSummary = UserIncomeSummary::where(['user_id' => $user->id],['transaction_type' => 'StepTracker'])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                 if (is_null($userIncomeSummary)) {
                     $userIncomeSummary = new UserIncomeSummary();
                     $userIncomeSummary->user_id = $user->id;
                     $userIncomeSummary->transaction_date = $request->step_count_date;
                     $userIncomeSummary->transaction_type = "StepTracker";
-                    $userIncomeSummary->withdrawl_status = "approved";
+                    // $userIncomeSummary->withdrawl_status = "approved";
                 }
                 $userIncomeSummary->credit_amount = $user_tracker->reward_amount;
                 $userIncomeSummary->steps =$request->step_count;
@@ -114,7 +114,7 @@ class UserTrackerController extends Controller
                 if ($user->parent_id) {
                     $firstReferralUser = User::where(['id' => $user->parent_id])->first();
 
-                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                    $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id],['transaction_type' => 'Referral'])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                     if (is_null($parentIncomeSummary)) {
                         $parentIncomeSummary = new UserIncomeSummary();
                         $parentIncomeSummary->user_id = $firstReferralUser->id;
