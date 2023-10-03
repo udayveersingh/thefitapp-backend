@@ -118,17 +118,10 @@ class UserTrackerController extends Controller
 
                     $parentIncomeSummary = UserIncomeSummary::where('user_id','=',$firstReferralUser->id)
                                                               ->where('transaction_type','=','Referral')  
-                                                              ->where('referred_user_id','!=',$user->id)
+                                                              ->whereNot('referred_user_id','=',$user->id)
                                                               ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)
-                                                              ->toSql();
-                    
-
-                    \DB::enableQueryLog(); // Enable query log
-
-// Your Eloquent query executed by using get()
-
-dd(\DB::getQueryLog()); // Show results of log
-dd($parentIncomeSummary);
+                                                              ->first();
+                 
                     
                     if (is_null($parentIncomeSummary)) {
                         $parentIncomeSummary = new UserIncomeSummary();
@@ -145,7 +138,7 @@ dd($parentIncomeSummary);
                     if ($firstReferralUser->parent_id) {
                         $secondParentIncomeSummary = UserIncomeSummary::where('user_id',"=",$firstReferralUser->parent_id)
                                                                         ->where('transaction_type',"=",'Referral')
-                                                                        ->where('referred_user_id','!=',$user->id)
+                                                                        ->whereNot('referred_user_id','=',$user->id)
                                                                         ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                         if (is_null($secondParentIncomeSummary)) {
                             $secondParentIncomeSummary = new UserIncomeSummary();
