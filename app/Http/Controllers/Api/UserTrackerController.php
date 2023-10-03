@@ -57,7 +57,6 @@ class UserTrackerController extends Controller
             ], 400);
         }
         $user = auth()->user();
-        dd($user);
         $user_tracker = UserTracker::where('step_count_date', '=', $request->step_count_date)->where('user_id', '=', $user->id)->first();
         // dd($user_tracker);
         if (is_null($user_tracker)) {
@@ -117,7 +116,7 @@ class UserTrackerController extends Controller
 
                     $parentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->id],['transaction_type' => 'Referral'])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
 
-
+                    
                     if (is_null($parentIncomeSummary)) {
                         $parentIncomeSummary = new UserIncomeSummary();
                         $parentIncomeSummary->user_id = $firstReferralUser->id;
