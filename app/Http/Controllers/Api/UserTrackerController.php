@@ -121,22 +121,25 @@ class UserTrackerController extends Controller
                         $parentIncomeSummary->transaction_date = $request->step_count_date;
                         $parentIncomeSummary->transaction_type = "Referral";
                         $parentIncomeSummary->referred_user_id = $user->id;
-                        $userIncomeSummary->withdrawl_status = "approved";
+                      //  $userIncomeSummary->withdrawl_status = "approved";
+                        $parentIncomeSummary->credit_amount = $firstLevelRewards;
+                        $parentIncomeSummary->save();
                     }
-                    $parentIncomeSummary->credit_amount = ((int) ($request->step_count / $minSteps)) * $firstLevelRewards;
-                    $parentIncomeSummary->save();
+
+                    
                     if ($firstReferralUser->parent_id) {
-                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
+                        $secondParentIncomeSummary = UserIncomeSummary::where(['user_id' => $firstReferralUser->parent_id,'transaction_type' => 'Referral'])->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                         if (is_null($secondParentIncomeSummary)) {
                             $secondParentIncomeSummary = new UserIncomeSummary();
                             $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
                             $secondParentIncomeSummary->transaction_date = $request->step_count_date;
                             $secondParentIncomeSummary->transaction_type = "Referral";
                             $parentIncomeSummary->referred_user_id = $user->id;
-                            $userIncomeSummary->withdrawl_status = "approved";
+                            // $userIncomeSummary->withdrawl_status = "approved";
+                            $secondParentIncomeSummary->credit_amount =  $secondLevelRewards;
+                            $secondParentIncomeSummary->save();
                         }
-                        $secondParentIncomeSummary->credit_amount = ((int) ($request->step_count / $minSteps)) * $secondLevelRewards;
-                        $secondParentIncomeSummary->save();
+                        
                     }
                 }
             }
