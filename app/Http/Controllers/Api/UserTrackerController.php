@@ -145,7 +145,7 @@ class UserTrackerController extends Controller
                             $secondParentIncomeSummary->user_id = $firstReferralUser->parent_id;
                             $secondParentIncomeSummary->transaction_date = $request->step_count_date;
                             $secondParentIncomeSummary->transaction_type = "Referral";
-                            $parentIncomeSummary->referred_user_id = $user->id;
+                            $secondParentIncomeSummary->referred_user_id = $user->id;
                             // $userIncomeSummary->withdrawl_status = "approved";
                             $secondParentIncomeSummary->credit_amount =  $secondLevelRewards;
                             $secondParentIncomeSummary->save();
