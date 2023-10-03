@@ -120,7 +120,7 @@ class UserTrackerController extends Controller
                                                               ->where('transaction_type','=','Referral')  
                                                               ->where('referred_user_id','=',$user->id)
                                                               ->where('transaction_date', "=", $request->step_count_date)
-                                                              ->get();
+                                                              ->first();
                  
                    // dd($parentIncomeSummary);
                     if (is_null($parentIncomeSummary)) {
