@@ -121,7 +121,14 @@ class UserTrackerController extends Controller
                                                               ->where('referred_user_id','!=',$user->id)
                                                               ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)
                                                               ->toSql();
-                    dd($parentIncomeSummary);
+                    
+
+                    \DB::enableQueryLog(); // Enable query log
+
+// Your Eloquent query executed by using get()
+
+dd(\DB::getQueryLog()); // Show results of log
+dd($parentIncomeSummary);
                     
                     if (is_null($parentIncomeSummary)) {
                         $parentIncomeSummary = new UserIncomeSummary();
