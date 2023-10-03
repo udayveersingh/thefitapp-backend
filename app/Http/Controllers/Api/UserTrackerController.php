@@ -117,7 +117,8 @@ class UserTrackerController extends Controller
                     $firstReferralUser = User::where(['id' => $user->parent_id])->first();
 
                     $parentIncomeSummary = UserIncomeSummary::where('user_id','=',$firstReferralUser->id)
-                                                              ->where('transaction_type','=','Referral')
+                                                              ->where('transaction_type','=','Referral')  
+                                                              ->where('referred_user_id','!=',$user->id)
                                                               ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                     
                     if (is_null($parentIncomeSummary)) {
@@ -135,6 +136,7 @@ class UserTrackerController extends Controller
                     if ($firstReferralUser->parent_id) {
                         $secondParentIncomeSummary = UserIncomeSummary::where('user_id',"=",$firstReferralUser->parent_id)
                                                                         ->where('transaction_type',"=",'Referral')
+                                                                        ->where('referred_user_id','!=',$user->id)
                                                                         ->where(DB::raw('DATE(transaction_date)'), "=", $request->step_count_date)->first();
                         if (is_null($secondParentIncomeSummary)) {
                             $secondParentIncomeSummary = new UserIncomeSummary();
