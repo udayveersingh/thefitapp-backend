@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use App\Models\User;
 use App\Models\UserIncomeSummary;
+use App\Models\UserTracker;
 use App\Models\UserOtp;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -274,12 +275,45 @@ class UserIncomeSummaryController extends Controller
         if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
-        $current_date = \Carbon\Carbon::today()->subDays(7);
-        $user_daily_goals = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type', '=', 'StepTracker')->where('transaction_date', '>=', $current_date)->get();
+        $today_date = \Carbon\Carbon::today();
+        $last_date = \Carbon\Carbon::today()->subDays(7);
+      //  $user_daily_goals = UserIncomeSummary::where('user_id', '=', $user->id)->where('transaction_type', '=', 'StepTracker')->where('transaction_date', '>=', $last_date)->get();
+        $daily_goal_data = [];
+        $exist_daily_goal = [];
+        $user_daily_goals = UserTracker::where('user_id', '=', $user->id)
+                                        ->where('step_count_date', '>=', $last_date)
+                                        ->select('id','user_id','step_count_date','step_count','step_target')
+                                        ->get();
+     //   dd($user_daily_goals);
+        foreach($user_daily_goals as $daily_goal){
+            $dayname = date('D', strtotime($daily_goal['step_count_date']));
+            $daily_goal['day'] = $dayname;
+            $step_perc = floor( (( $daily_goal['step_count'] / $daily_goal['step_target'] ) * 100));
+            if($step_perc >= 100)
+            $step_perc = 100;
+            $daily_goal['step_count_perc'] = $step_perc;
+            $exist_daily_goal[$daily_goal['step_count_date']] = $daily_goal;
+        }
+
+        for($i = $today_date; $i > $last_date; $i->modify('-1 day')){
+            $current_date = date('Y-m-d',strtotime($i));
+            if(array_key_exists($current_date,$exist_daily_goal)){
+                $daily_goal_data[] = $exist_daily_goal[$current_date];
+            }else{
+                $daily_goal_data[] =[
+                    'day' => date('D', strtotime($i)),
+                    'step_count_date' => date('Y-m-d',strtotime($i)),
+                    'step_count' => 0,
+                    'step_count_perc' => 0,
+                ];
+            }
+            
+        }
+        
         $response = [
             "success" => true,
             "data" => [
-                "user_daily_goals" => $user_daily_goals,
+                "daily_goals"   => $daily_goal_data,
             ],
         ];
         return response()->json($response, 200);

@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 use App\Models\Profile;
+use App\Models\Setting;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Str;
@@ -70,6 +71,12 @@ class RegisterController extends Controller
         $profile_pic = env('APP_URL').'/storage/images/'.$profile['profile_pic'];
         else
         $profile_pic = '';
+
+        $settings = Setting::pluck('value', 'key');
+        if(!empty($settings))
+        $user['target_steps'] = $settings['minimum_steps'];
+        else
+        $user['target_steps'] = 5000;
 
         $user['profile_pic'] =  $profile_pic;
 
