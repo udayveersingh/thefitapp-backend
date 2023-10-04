@@ -91,6 +91,7 @@ class UserTrackerController extends Controller
         $stepRewards = $setting['step_rewards'];
         $firstLevelRewards = $setting['first_level_commission'];
         $secondLevelRewards = $setting['second_level_commission'];
+        $user_tracker->step_target = $minSteps;
         if ($request->step_count >= $minSteps) {
             // $user_tracker->reward_amount = ((int) ($total_step_count / $minSteps)) * $stepRewards;
             $user_tracker->reward_amount = $stepRewards;
