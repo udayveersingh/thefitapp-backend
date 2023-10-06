@@ -177,7 +177,7 @@ class UserIncomeSummaryController extends Controller
             "data" => [
                 // "health" => $healthRewards,
                 // "referral" => $referralRewards,
-                "wallet_balance" => $totalBalance,
+                "wallet_balance" => round($totalBalance,2)
             ],
         ];
         return response()->json($response, 200);
