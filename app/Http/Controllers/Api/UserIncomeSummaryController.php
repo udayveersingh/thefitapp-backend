@@ -322,6 +322,7 @@ class UserIncomeSummaryController extends Controller
     /* Public function coin converter */
 
     public function coinConverter(Request $request){
+        
         $validator = Validator::make($request->all(), [
             'amount' => 'required',
         ]);
@@ -355,7 +356,7 @@ class UserIncomeSummaryController extends Controller
         curl_close($curl);
 
         if(!empty($response)){
-            $arr_data = json_decode($response);
+            $arr_data = json_decode($response, true);
             $one_pox_usd = $arr_data['pollux-coin']['usd'];
             $user_pox = $usdt_amt * $one_pox_usd;
             return response()->json([
