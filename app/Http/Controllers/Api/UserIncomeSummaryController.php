@@ -318,4 +318,54 @@ class UserIncomeSummaryController extends Controller
         ];
         return response()->json($response, 200);
     }
+
+    /* Public function coin converter */
+
+    public function coinConverter(Request $request){
+        $validator = Validator::make($request->all(), [
+            'amount' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
+        $usdt_amt = $request->amount;
+
+        // curl call 
+        $curl = curl_init();
+
+        curl_setopt_array($curl, array(
+            CURLOPT_URL => 'https://api.coingecko.com/api/v3/simple/price?ids=pollux-coin&vs_currencies=usd',
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_ENCODING => '',
+            CURLOPT_MAXREDIRS => 10,
+            CURLOPT_TIMEOUT => 0,
+            CURLOPT_FOLLOWLOCATION => true,
+            CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+            CURLOPT_CUSTOMREQUEST => 'GET',
+            CURLOPT_HTTPHEADER => array(
+                ': '.env('COIN_GEKO_API_KEY')
+            ),
+        ));
+
+        $response = curl_exec($curl);
+        curl_close($curl);
+
+        if(!empty($response)){
+            $arr_data = json_decode($response);
+            return response()->json([
+                'success' => true,
+                'message' => $arr_data
+            ], 200);
+        }else{
+            return response()->json([
+                'success' => false,
+                'message' => 'Coin conversion api issue! Try later.'
+            ], 400);
+        }
+        
+    }
 }

@@ -46,6 +46,6 @@ Route::post('/user-withdraw-balance',[App\Http\Controllers\Api\UserIncomeSummary
 Route::get('/withdrawl-list',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'withDrawlList']);
 Route::get('/user-wallet-balance',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'walletBalance']);
 Route::get('/user-earnings',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userEarnings']);
-Route::get('user-daily-goals',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userDailyGoals']);
-
+Route::get('/user-daily-goals',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userDailyGoals']);
+Route::get('/coin-converter',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'coinConverter']);
 
