@@ -358,11 +358,14 @@ class UserIncomeSummaryController extends Controller
         if(!empty($response)){
             $arr_data = json_decode($response, true);
             $one_pox_usd = $arr_data['pollux-coin']['usd'];
-            $user_pox = $usdt_amt * $one_pox_usd;
+            $user_pox = $usdt_amt / $one_pox_usd;
+            $coin_data = [
+                "pox_usd"=>$user_pox
+            ];
             return response()->json([
                 'success' => true,
                 'one_pox_usd' => $one_pox_usd,
-                'message' => $user_pox
+                'data' => $coin_data
             ], 200);
         }else{
             return response()->json([
