@@ -36,8 +36,8 @@
                                 @foreach ($kyc_pending_list as $kyc_list)
                                     ['{{ ucfirst($kyc_list->name) }}',
                                         '{{ $kyc_list->wallet_address }}',
-                                        '<a target="_blank" href="{{ env("APP_URL")."storage/images/".$kyc_list->user_id.$kyc_list->kyc_doc_2 }}">{{ $kyc_list->kyc_doc_1 }}</a>',
-                                        '<a target="_blank" href="{{ env("APP_URL")."storage/images/".$kyc_list->user_id.$kyc_list->kyc_doc_2 }}">{{ $kyc_list->kyc_doc_2 }}</a>',
+                                        '<a target="_blank" href="{{ env("APP_URL")."storage/user/".$kyc_list->user_id."/".$kyc_list->kyc_doc_2 }}">{{ $kyc_list->kyc_doc_1 }}</a>',
+                                        '<a target="_blank" href="{{ env("APP_URL")."storage/user/".$kyc_list->user_id."/".$kyc_list->kyc_doc_2 }}">{{ $kyc_list->kyc_doc_2 }}</a>',
                                         '{{$kyc_list->updated_at}}',
                                         '<select name="kyc_status" id="kyc_status"><option value="">~Select Option~</option><option value="{{ $kyc_list->id }}_1">Approve</option><option value="{{ $kyc_list->id }}_0">Reject</option></select>'
                                     ],
