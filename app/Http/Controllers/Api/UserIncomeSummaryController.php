@@ -379,7 +379,7 @@ class UserIncomeSummaryController extends Controller
         
     }
 
-    public function verifyProfile(){
+    public function verifyProfile(Request $request){
 
 
         $user = auth()->user();
