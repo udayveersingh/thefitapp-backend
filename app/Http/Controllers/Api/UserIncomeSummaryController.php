@@ -430,7 +430,7 @@ class UserIncomeSummaryController extends Controller
             if($user_profile->save()){
                 return response()->json([
                     'success' => true, 
-                    'message' => 'We recieved your documents. You will be notify within 24 hours!'
+                    'message' => 'We recieved your documents. You will be notify within 24 hours about your KYC status!'
                 ], 200);
             }else{
                 return response()->json([
