@@ -172,12 +172,22 @@ class UserIncomeSummaryController extends Controller
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
         $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
+        $profile = UserIncomeSummary::where('user_id', '=', $user->id)->first();
+        if(!empty($profile)){
+            $kyc_status = (!empty($profile->kyc_status) && ($profile->kyc_status==1))?'verified':'un-verified';
+            $wallet_address = $profile->wallet_address;
+        }else{
+            $kyc_status = 'un-verified';
+            $wallet_address = '';
+        }
         $response = [
             "success" => true,
             "data" => [
                 // "health" => $healthRewards,
                 // "referral" => $referralRewards,
-                "wallet_balance" => round($totalBalance,2)
+                "wallet_balance" => round($totalBalance,2),
+                "wallet_address" => $wallet_address,
+                "kyc_status" => $kyc_status
             ],
         ];
         return response()->json($response, 200);
@@ -187,7 +197,8 @@ class UserIncomeSummaryController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'amount' => 'required',
-            'withdrawl_address' => 'required',
+         //   'withdrawl_address' => 'required',
+            'amount_to_pox' => 'required',
             // 'transaction_date' => 'required',
             // 'email_otp' => 'required',
         ]);
@@ -211,25 +222,18 @@ class UserIncomeSummaryController extends Controller
         if ($totalBalance < $request->amount) {
             return response()->json(['success' => false, "message" => "Your wallet balance is less than the requested amount."], 400);
         }
-
+  
         $current_date = date('Y-m-d');
         $withdraw_balance = new UserIncomeSummary();
         $withdraw_balance->user_id = $user->id;
         $withdraw_balance->debit_amount = $request->amount;
+        $withdraw_balance->pox_amount =  $request->amount_to_pox;
         $withdraw_balance->transaction_type = "WithDrawl";
         $withdraw_balance->withdrawl_status = "pending";
         $withdraw_balance->transaction_date = $current_date;
+  
         if ($withdraw_balance->save()) {
             // dd($withdraw_balance->user_id);
-            $user_profile = Profile::where('user_id', '=', $withdraw_balance->user_id)->first();
-            if (is_null($user_profile)) {
-                $user_profile = new Profile();
-            } else {
-                $user_profile = Profile::find($user_profile->id);
-            }
-            $user_profile->user_id = $user->id;
-            $user_profile->wallet_address = $request->withdrawl_address;
-            $user_profile->save();
             return response()->json(['success' => true, "message" => "We recieved your withdrawal request! We will process soon after reviewing your account."], 200);
         }
     }
@@ -374,4 +378,61 @@ class UserIncomeSummaryController extends Controller
         }
         
     }
+
+    public function verifyProfile(){
+
+
+        $user = auth()->user();
+        if (is_null($user)) {
+            return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'wallet_address' => 'required',
+            'kyc_doc_aadhar' => 'required',
+            'kyc_doc_pan' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                'success' => false,
+                'message' => $validator->errors()->first()
+            ], 400);
+        }
+
+        $user_profile = Profile::find($user->id);
+        if (is_null($user_profile)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'First update your profile to proceed with KYC'
+            ], 400);
+        } else {
+
+            $kyc_doc_pan= null;
+            if($request->kyc_doc_pan){
+                $kyc_doc_1 = 'pan-'.time() . '.' . $request->kyc_doc_pan;
+                $request->kyc_doc_1->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_1);
+            }
+
+            $kyc_doc_aadhar= null;
+            if($request->kyc_doc_aadhar){
+                $kyc_doc_2 = 'aadhar-'.time() . '.' . $request->kyc_doc_aadhar;
+                $request->kyc_doc_2->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_2);
+            }
+
+            $user_profile->user_id = $user->id;
+            $user_profile->kyc_doc_1 = $request->$kyc_doc_pan;
+            $user_profile->kyc_doc_2 = $request->$kyc_doc_aadhar;
+            $user_profile->wallet_address = $request->wallet_address;
+            $user_profile->save();
+
+            return response()->json([
+                                        'success' => true, 
+                                        'message' => 'We recieved your documents. You will be notify within 24 hours!'
+                                    ], 200);
+
+        }
+
+    }
+
 }

@@ -48,4 +48,5 @@ Route::get('/user-wallet-balance',[App\Http\Controllers\Api\UserIncomeSummaryCon
 Route::get('/user-earnings',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userEarnings']);
 Route::get('/user-daily-goals',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'userDailyGoals']);
 Route::get('/coin-converter',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'coinConverter']);
+Route::get('/verify-profile',[App\Http\Controllers\Api\UserIncomeSummaryController::class,'verifyProfile']);
 
