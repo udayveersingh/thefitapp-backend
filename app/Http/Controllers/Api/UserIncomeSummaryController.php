@@ -187,8 +187,7 @@ class UserIncomeSummaryController extends Controller
                 // "referral" => $referralRewards,
                 "wallet_balance" => round($totalBalance,2),
                 "wallet_address" => $wallet_address,
-                "kyc_status" => $kyc_status,
-                'profile'   => $profile
+                "kyc_status" => $kyc_status
             ],
         ];
         return response()->json($response, 200);
