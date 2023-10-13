@@ -400,7 +400,8 @@ class UserIncomeSummaryController extends Controller
             ], 400);
         }
 
-        $user_profile = Profile::find($user->id);
+        
+        $user_profile = Profile::where('user_id', '=', $user->id)->first();
         if (is_null($user_profile)) {
             return response()->json([
                 'success' => false,
