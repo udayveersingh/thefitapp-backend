@@ -411,13 +411,13 @@ class UserIncomeSummaryController extends Controller
 
             $kyc_doc_pan= null;
             if($request->hasFile('kyc_doc_pan')){
-                $kyc_doc_pan = 'pan-'.time() . '.' . $request->kyc_doc_pan. '.' . $request->kyc_doc_pan->extension();
+                $kyc_doc_pan = 'pan-'. time() . '.' . $request->kyc_doc_pan->extension();
                 $request->kyc_doc_pan->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_pan);
             }
 
             $kyc_doc_aadhar= null;
             if($request->hasFile('kyc_doc_aadhar')){
-                $kyc_doc_aadhar = 'aadhar-'.time() . '.' . $request->kyc_doc_aadhar. '.'. $request->kyc_doc_aadhar->extension();
+                $kyc_doc_aadhar = 'aadhar-'. time() . '.' .  $request->kyc_doc_aadhar->extension();
                 $request->kyc_doc_aadhar->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_aadhar);
             }
 
