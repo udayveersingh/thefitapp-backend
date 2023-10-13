@@ -172,7 +172,7 @@ class UserIncomeSummaryController extends Controller
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
         $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
-        $profile = Profile::find($user->id);
+        $profile = Profile::where('user_id', '=', $user->id)->first();
         if(!empty($profile)){
             $kyc_status = (!empty($profile->kyc_status) && ($profile->kyc_status==1))?'verified':'un-verified';
             $wallet_address = $profile->wallet_address;
