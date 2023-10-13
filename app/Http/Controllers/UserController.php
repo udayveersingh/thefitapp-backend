@@ -129,7 +129,7 @@ class UserController extends Controller
                 $profile = DB::table('profiles')
                                 ->select('profiles.*','users.email','users.name')
                                 ->join('users', 'users.id', '=', 'profiles.user_id')
-                                ->where('id', $id)
+                                ->where('profiles.id', $id)
                                 ->first();
 
                 if(env('APP_ENV') != "local"){
