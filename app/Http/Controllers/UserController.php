@@ -135,7 +135,7 @@ class UserController extends Controller
                                 ->first();
 
                 if(env('APP_ENV') != "local"){
-                    Mail::to($profile->email)->send(new SendOTPEmailNotification($profile));
+                    Mail::to($profile->email)->send(new VerifyProfile($profile));
                 }
 
                 if($affected){
