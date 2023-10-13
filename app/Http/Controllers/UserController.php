@@ -99,8 +99,51 @@ class UserController extends Controller
         $users_withdrawl = DB::table('user_income_summaries')
         ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.debit_amount', 'user_income_summaries.transaction_type','users.name','user_income_summaries.withdrawl_status')
         ->join('users', 'users.id', '=', 'user_income_summaries.user_id')->where('transaction_type', '=','WithDrawl')->orderBy(DB::raw("DATE_FORMAT(user_income_summaries.transaction_date,'%d-%m-%Y')"), 'DESC')->get();
-
-    return view('reports.withdrawl_list', compact('users_withdrawl'));
+        return view('reports.withdrawl_list', compact('users_withdrawl'));
 
     }
+
+    public function kycRequestList(){
+        $kyc_pending_list = DB::table('profiles')
+                                ->select('profiles.*','users.name')
+                                ->join('users', 'users.id', '=', 'profiles.user_id')
+                                ->where('kyc_status', '=','0')
+                                ->orderBy('profiles.updated_at', 'DESC')
+                                ->get();
+        return view('users.kyc-list', compact('kyc_pending_list'));
+    }
+
+    public function kycUpdateStatus(Request $request){
+        //return $request->keyid_status;
+        if(!empty($request->keyid_status)){
+            $key_id_status = explode('_',$request->keyid_status);
+         //   print_r($key_id_status);
+         //   die();
+            $id = $key_id_status[0];
+            $status = $key_id_status[1];
+            if(!empty($id)){
+                $affected = DB::table('profiles')
+                                ->where('id', $id)
+                                ->update(['kyc_status' => $status]);
+                // sent email
+                $profile = DB::table('profiles')
+                                ->select('profiles.*','users.email','users.name')
+                                ->join('users', 'users.id', '=', 'profiles.user_id')
+                                ->where('id', $id)
+                                ->first();
+
+                if(env('APP_ENV') != "local"){
+                    Mail::to($profile->email)->send(new SendOTPEmailNotification($profile));
+                }
+
+                if($affected){
+                    return $status;
+                }
+            }
+        }else{
+            return 'something went wrong!';
+        }
+    }
+
+
 }

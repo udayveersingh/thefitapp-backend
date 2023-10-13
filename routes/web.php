@@ -19,6 +19,8 @@ Route::get('/user/{id}/detail/',[UserController::class,'userDetail'])->name('use
 Route::get('/step-trackers-earnings',[UserController::class,'stepTrackerEarnings'])->name('step-trackers-earnings');
 Route::get('/referral-earnings',[UserController::class,'referralEarnings'])->name('referral-earnings');
 Route::get('/withdrawl-list',[UserController::class,'withdrawlList'])->name('withdrawl-list');
+Route::get('/kyc-requests',[UserController::class,'kycRequestList'])->name('kyc-requests');
+Route::post('/kyc-update',[UserController::class,'kycUpdateStatus'])->name('kyc-update');
 
 // Route::get('/user/trackers',[UserController::class,'trackers'])->name('user.trackers');
 Route::post('/user/update/{id}',[UserController::class,'update'])->name('user.update');
