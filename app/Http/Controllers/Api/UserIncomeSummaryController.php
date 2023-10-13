@@ -172,7 +172,7 @@ class UserIncomeSummaryController extends Controller
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
         $totalBalance = UserIncomeSummary::where('user_id', '=', $user->id)->sum('credit_amount');
-        $profile = UserIncomeSummary::where('user_id', '=', $user->id)->first();
+        $profile = Profile::find($user->id);
         if(!empty($profile)){
             $kyc_status = (!empty($profile->kyc_status) && ($profile->kyc_status==1))?'verified':'un-verified';
             $wallet_address = $profile->wallet_address;
@@ -187,7 +187,8 @@ class UserIncomeSummaryController extends Controller
                 // "referral" => $referralRewards,
                 "wallet_balance" => round($totalBalance,2),
                 "wallet_address" => $wallet_address,
-                "kyc_status" => $kyc_status
+                "kyc_status" => $kyc_status,
+                'profile'   => $profile
             ],
         ];
         return response()->json($response, 200);
