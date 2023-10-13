@@ -410,28 +410,35 @@ class UserIncomeSummaryController extends Controller
         } else {
 
             $kyc_doc_pan= null;
-            if($request->kyc_doc_pan){
-                $kyc_doc_1 = 'pan-'.time() . '.' . $request->kyc_doc_pan;
-                $request->kyc_doc_1->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_1);
+            if($request->hasFile('kyc_doc_pan')){
+                $kyc_doc_pan = 'pan-'.time() . '.' . $request->kyc_doc_pan. '.' . $request->kyc_doc_pan->extension();
+                $request->kyc_doc_1->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_pan);
             }
 
             $kyc_doc_aadhar= null;
-            if($request->kyc_doc_aadhar){
-                $kyc_doc_2 = 'aadhar-'.time() . '.' . $request->kyc_doc_aadhar;
-                $request->kyc_doc_2->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_2);
+            if($request->hasFile('kyc_doc_aadhar')){
+                $kyc_doc_aadhar = 'aadhar-'.time() . '.' . $request->kyc_doc_aadhar. '.'. $request->kyc_doc_aadhar->extension();
+                $request->kyc_doc_2->move(public_path('storage/user/'.$user->id.'/'),  $kyc_doc_aadhar);
             }
 
             $user_profile->user_id = $user->id;
-            $user_profile->kyc_doc_1 = $request->$kyc_doc_pan;
-            $user_profile->kyc_doc_2 = $request->$kyc_doc_aadhar;
+            $user_profile->kyc_doc_1 = $kyc_doc_pan;
+            $user_profile->kyc_doc_2 = $kyc_doc_aadhar;
             $user_profile->wallet_address = $request->wallet_address;
             $user_profile->kyc_status = 0;
-            $user_profile->save();
-
-            return response()->json([
-                                        'success' => true, 
-                                        'message' => 'We recieved your documents. You will be notify within 24 hours!'
-                                    ], 200);
+            
+            if($user_profile->save()){
+                return response()->json([
+                    'success' => true, 
+                    'message' => 'We recieved your documents. You will be notify within 24 hours!'
+                ], 200);
+            }else{
+                return response()->json([
+                    'success' => false, 
+                    'message' => 'Something went worng.Try again later!'
+                ], 400);
+            }
+            
 
         }
 
