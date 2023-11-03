@@ -115,6 +115,16 @@ class UserController extends Controller
         return view('users.kyc-list', compact('kyc_pending_list'));
     }
 
+    public function kycApprovedList(){
+        $kyc_approved_list = DB::table('profiles')
+                                ->select('profiles.*','users.name')
+                                ->join('users', 'users.id', '=', 'profiles.user_id')
+                                ->where('kyc_status', '>',0)
+                                ->orderBy('profiles.updated_at', 'DESC')
+                                ->get();
+        return view('users.kyc-approved-list', compact('kyc_approved_list'));
+    }
+
     public function kycUpdateStatus(Request $request){
         //return $request->keyid_status;
         if(!empty($request->keyid_status)){
@@ -126,7 +136,7 @@ class UserController extends Controller
             if(!empty($id)){
                 $affected = DB::table('profiles')
                                 ->where('id', $id)
-                                ->update(['kyc_status' => $status]);
+                                ->update(['kyc_status' => $status,'kyc_approve_date' => date('Y-m-d h:i:s')]);
                 // sent email
                 $profile = DB::table('profiles')
                                 ->select('profiles.*','users.email','users.name')

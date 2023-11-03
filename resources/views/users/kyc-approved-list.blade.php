@@ -16,7 +16,7 @@
         <script src="{{ asset('/assets/js/simple-datatables.js') }}"></script>
         <div class="panel px-0 border-[#e0e6ed] dark:border-[#1b2e4b]">
             <div class="px-5">
-                <h5 class="md:absolute md:top-[25px] md:mb-0 mb-5 font-semibold text-lg dark:text-white-light">Pending KYC
+                <h5 class="md:absolute md:top-[25px] md:mb-0 mb-5 font-semibold text-lg dark:text-white-light"> KYC Status
                 </h5>
             </div>
             <div class="step-trackers-Table">
@@ -31,15 +31,16 @@
                 init() {
                     this.datatable1 = new simpleDatatables.DataTable('#usersWithdrawlTable', {
                         data: {
-                            headings: ['Name','Wallet Address','PAN', 'Aadhar','Submitted Date','Action'],
+                            headings: ['Name','Wallet Address','PAN', 'Aadhar','Status','Submitted Date','Approved/Reject Date'],
                             data: [
-                                @foreach ($kyc_pending_list as $kyc_list)
+                                @foreach ($kyc_approved_list as $kyc_list)
                                     ['{{ ucfirst($kyc_list->name) }}',
                                         '{{ $kyc_list->wallet_address }}',
                                         '<a target="_blank" style="text-decoration:underline" href="{{ env("APP_URL")."storage/user/".$kyc_list->user_id."/".$kyc_list->kyc_doc_1 }}">{{ $kyc_list->kyc_doc_1 }}</a>',
                                         '<a target="_blank" style="text-decoration:underline" href="{{ env("APP_URL")."storage/user/".$kyc_list->user_id."/".$kyc_list->kyc_doc_2 }}">{{ $kyc_list->kyc_doc_2 }}</a>',
+                                        '{{ $kyc_list->kyc_status==1?"Approved":"Rejected" }}',
                                         '{{ date("Y-m-d",strtotime($kyc_list->kyc_submit_date)) }}',
-                                        '<select name="kyc_status" id="kyc_status"><option value="">~Select Option~</option><option value="{{ $kyc_list->id }}_1">Approve</option><option value="{{ $kyc_list->id }}_2">Reject</option></select>'
+                                        '{{ date("Y-m-d",strtotime($kyc_list->kyc_approve_date)) }}'
                                     ],
                                 @endforeach
                             ]

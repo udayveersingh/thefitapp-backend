@@ -426,6 +426,7 @@ class UserIncomeSummaryController extends Controller
             $user_profile->kyc_doc_2 = $kyc_doc_aadhar;
             $user_profile->wallet_address = $request->wallet_address;
             $user_profile->kyc_status = 0;
+            $user_profile->kyc_submit_date = date('Y-m-d h:i:s');
             
             if($user_profile->save()){
                 return response()->json([
