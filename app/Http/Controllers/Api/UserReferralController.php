@@ -31,7 +31,7 @@ class UserReferralController extends Controller
         if (is_null($user)) {
             return response()->json(['success' => false, 'message' => "Invalid Request"], 401);
         }
-        $total_referral_earns = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','Referral')->sum('credit_amount');
+        $total_referral_earns = UserIncomeSummary::where('user_id','=',$user->id)->where('transaction_type','=','Referral')->where('refferal_payout','=','1')->sum('credit_amount');
         // dd($request->all());
         $limit = $request->limit ? $request->limit : 10;
         $page = $request->page ? $request->page : 1;
@@ -41,7 +41,7 @@ class UserReferralController extends Controller
 
         $referralFriendsQuery = DB::table('user_income_summaries')
         ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'),'user_income_summaries.credit_amount','users.name')
-        ->join('users', 'users.id','=','user_income_summaries.referred_user_id')->where('user_income_summaries.user_id','=',$user->id);
+        ->join('users', 'users.id','=','user_income_summaries.referred_user_id')->where('user_income_summaries.user_id','=',$user->id)->where('refferal_payout','=','1');
         // ->where('user_income_summaries.transaction_type','=','Referral');
     // ->get();
         if ($request->transaction_date) {
