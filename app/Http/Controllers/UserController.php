@@ -191,7 +191,7 @@ class UserController extends Controller
                                     ];
             }
         }
-        mail('uday.jbbn@gmail.com','Payout Delivered',$payout_delivered); 
+        mail('uday.jbbn@gmail.com','Payout Delivered',json_encode($payout_delivered)); 
     }
 
 }
