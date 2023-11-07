@@ -159,7 +159,7 @@ class UserController extends Controller
 
     /* Daily Payout */
     public function userPayout(Request $request){
-        $body = 'Cron timeon server:'.date('Y-m-d h:i:s');
+        $body = 'Cron timeon server:'.date('Y-m-d h:i:s').'TimeZone:'.date_default_timezone_get();
         mail('uday.jbbn@gmail.com','Payout test',$body);
     }
 
