@@ -158,7 +158,7 @@ class UserController extends Controller
     }
 
     /* Daily Payout */
-    public function payout(Request $request){
+    public function userPayout(Request $request){
         mail('uday.jbbn@gmail.com','Payout test','testing!');
     }
 
