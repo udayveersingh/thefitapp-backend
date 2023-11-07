@@ -165,7 +165,7 @@ class UserController extends Controller
         $payout_delivered = [];
         // Logic to get data
         $user_referrals_last_day = DB::table('user_income_summaries')
-            ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.credit_amount', 'user_income_summaries.transaction_type', 'user_income_summaries.user_id','user_income_summaries.id','user_income_summaries.reffered_user_id','user_income_summaries.credit_amount')
+            ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.credit_amount', 'user_income_summaries.transaction_type', 'user_income_summaries.user_id','user_income_summaries.id','user_income_summaries.referred_user_id','user_income_summaries.credit_amount')
             ->where('transaction_type', '=', 'Referral')
             ->where('refferal_payout', '=', '0')
             ->where('transaction_date', '>=', Carbon::now()->subDay()->toDateTimeString())
@@ -187,7 +187,7 @@ class UserController extends Controller
                $payout_delivered[] = [ 
                                         'User Got Payout Id'=>$user_referrals_last_day->user_id, 
                                         'Credit Amount' => $user_referrals_last_day->credit_amount,
-                                        'User Reffered' => $user_referrals_last_day->reffered_user_id 
+                                        'User Reffered' => $user_referrals_last_day->referred_user_id 
                                     ];
             }
         }
