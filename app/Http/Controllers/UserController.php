@@ -159,7 +159,8 @@ class UserController extends Controller
 
     /* Daily Payout */
     public function userPayout(Request $request){
-        mail('uday.jbbn@gmail.com','Payout test','testing!');
+        $body = 'Cron timeon server:'.date('Y-m-d h:i:s');
+        mail('uday.jbbn@gmail.com','Payout test',$body);
     }
 
 }
