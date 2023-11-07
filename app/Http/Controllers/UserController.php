@@ -185,9 +185,9 @@ class UserController extends Controller
                                 ->update(['refferal_payout' => '1']);
                // print_r($user_tracker_last_day);
                $payout_delivered[] = [ 
-                                        'User Got Payout Id'=>$user_referrals_last_day->user_id, 
-                                        'Credit Amount' => $user_referrals_last_day->credit_amount,
-                                        'User Reffered' => $user_referrals_last_day->referred_user_id 
+                                        'User Got Payout Id'=>$last_day->user_id, 
+                                        'Credit Amount' => $last_day->credit_amount,
+                                        'User Reffered' => $last_day->referred_user_id 
                                     ];
             }
         }
