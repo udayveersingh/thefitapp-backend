@@ -162,9 +162,10 @@ class UserController extends Controller
         $body = 'Cron timeon server:'.date('Y-m-d h:i:s').'TimeZone:'.date_default_timezone_get();
         // mail('uday.jbbn@gmail.com','Payout test',$body); 
         echo "Date:".Carbon::now()->subDay()->toDateTimeString();
+        $payout_delivered = [];
         // Logic to get data
         $user_referrals_last_day = DB::table('user_income_summaries')
-            ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.credit_amount', 'user_income_summaries.transaction_type', 'user_income_summaries.user_id','user_income_summaries.id')
+            ->select(DB::raw('DATE_FORMAT(user_income_summaries.transaction_date,"%m-%d-%Y") as date'), 'user_income_summaries.credit_amount', 'user_income_summaries.transaction_type', 'user_income_summaries.user_id','user_income_summaries.id','user_income_summaries.reffered_user_id','user_income_summaries.credit_amount')
             ->where('transaction_type', '=', 'Referral')
             ->where('refferal_payout', '=', '0')
             ->where('transaction_date', '>=', Carbon::now()->subDay()->toDateTimeString())
@@ -183,8 +184,14 @@ class UserController extends Controller
                                 ->where('id', $last_day->id)
                                 ->update(['refferal_payout' => '1']);
                // print_r($user_tracker_last_day);
+               $payout_delivered[] = [ 
+                                        'User Got Payout Id'=>$user_referrals_last_day->user_id, 
+                                        'Credit Amount' => $user_referrals_last_day->credit_amount,
+                                        'User Reffered' => $user_referrals_last_day->reffered_user_id 
+                                    ];
             }
         }
+        mail('uday.jbbn@gmail.com','Payout Delivered',$payout_delivered); 
     }
 
 }
