@@ -21,6 +21,7 @@ Route::get('/referral-earnings',[UserController::class,'referralEarnings'])->nam
 Route::get('/withdrawl-list',[UserController::class,'withdrawlList'])->name('withdrawl-list');
 Route::get('/kyc-requests',[UserController::class,'kycRequestList'])->name('kyc-requests');
 Route::get('/kyc-approved',[UserController::class,'kycApprovedList'])->name('kyc-approved');
+Route::get('/payout',[UserController::class,'userPayout'])->name('payout');
 Route::post('/kyc-update',[UserController::class,'kycUpdateStatus'])->name('kyc-update');
 
 // Route::get('/user/trackers',[UserController::class,'trackers'])->name('user.trackers');
@@ -37,6 +38,8 @@ Route::post('/tasks/update/{id}',[App\Http\Controllers\TaskController::class,'up
 //Settings
 Route::get('/settings', [App\Http\Controllers\SettingController::class,'index'])->name('settings.index');
 Route::post('/settings/store',[App\Http\Controllers\SettingController::class,'store'])->name('settings.store');
+
+
 // Route::get('/settings/create', [App\Http\Controllers\SettingController::class,'create'])->name('settings.create');
 // Route::get('/settings/{id}/edit',[App\Http\Controllers\SettingController::class,'edit'])->name('settings.edit');
 // Route::get('/settings/delete/{id}',[App\Http\Controllers\SettingController::class,'destroy'])->name('settings.delete');

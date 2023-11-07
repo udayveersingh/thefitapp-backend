@@ -157,5 +157,9 @@ class UserController extends Controller
         }
     }
 
+    /* Daily Payout */
+    public function payout(Request $request){
+        mail('uday.jbbn@gmail.com','Payout test','testing!');
+    }
 
 }
